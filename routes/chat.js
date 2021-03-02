@@ -5,3 +5,5 @@ const router = express.Router();
 router.get("/", (req, res, next) => {
   res.render("chat", { title: "Slack Clone" });
 });
+
+module.exports = router;

@@ -20,20 +20,16 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 // Middlewares:
-
 app.use(express.urlencoded({ extended: false }));
-
 app.use(cookieParser());
+console.log(path.join(__dirname, 'scss'),path.join(__dirname,'public/css'))
 
-app.use(
-  sassMiddleware({
-    src: path.join(__dirname, "public/scss"),
-    dest: path.join(__dirname, "public/css"),
-    indentedSyntax: false,
-    sourceMap: true,
-  })
-);
-app.use(express.static(path.join(__dirname, "public")));
+app.use(sassMiddleware({
+  src: path.join(__dirname, 'scss'),
+  dest: path.join(__dirname,'public'),
+  outputStyle: "compressed"
+}));
+app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/', homeRouter)
 app.use("/chat", chatRouter);
