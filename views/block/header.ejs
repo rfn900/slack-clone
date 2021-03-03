@@ -1,7 +1,20 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
+    <title></title>
     <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/solid.min.css">
   </head>
   <body>
+    
+  <header>
+      <div class="header__main">
+        <%- clockIcon %>
+        <div class="input-div">
+          <input type="text" name="header-search" placeholder="Search Chatroom" id="header-search">
+          <%- searchIcon %> 
+        </div>
+        <%- questionIcon %>
+      </div>
+      <img src="/images/profile-photo.png" alt="">
+  </header>
