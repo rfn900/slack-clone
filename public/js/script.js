@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", e=>{
         item.addEventListener('click', e => {
             caretIconSpan[index].classList.toggle("rotate")
             channelList[index].classList.toggle("hide")
-            toggleH3.classList.toggle("active")
+            if(index==0)toggleH3.classList.toggle("active")
         })
     })
 })

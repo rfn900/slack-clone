@@ -91,12 +91,24 @@ header{
     width: 100%;
     display: flex;
     .sidebar{
+        overflow-y: scroll;
         flex: 1;
         min-width: 220px;
         max-width: 300px;
         height: 100%;
         background-color: #340E36;  
 
+        &::-webkit-scrollbar{
+            background-color: #340E36;
+            width: 10px;
+        }
+
+        &::-webkit-scrollbar-thumb{
+            background-color: rgba(250, 250, 250, 0.3);
+            
+            border-radius: 20px;
+        }
+        
         &__title{
             color: #f4f6f8;
             display: flex;
@@ -162,7 +174,8 @@ header{
 
         &__bottom{
             margin-top:5px;
-            
+            font-size: 14px;
+            padding-bottom: 80px;
 
             .toggle-title{
                 display: flex;
@@ -200,16 +213,21 @@ header{
                 display:flex;
                 flex-direction: column;
                 align-items: flex-start;
-                padding: 0 30px;
+                padding: 0 0 0 30px;
                 color:#baa3bb;  
                 &__item{
                     display: flex;
                     align-items: center;
                     padding: 4px 0;
-
+                    font-size: 16px;
                     span{
                         margin-right: 10px;
-                        font-size: 16px;
+                    }
+
+                    img{
+                        width: 22px;
+                        margin: 0 7px 0 5px;
+                        border-radius: 5px;
                     }
                 }
             }
