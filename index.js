@@ -6,7 +6,6 @@ const sassMiddleware = require("node-sass-middleware");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 
-
 dotenv.config();
 const app = express();
 const io = socket(http);
@@ -23,16 +22,18 @@ app.set("view engine", "ejs");
 // Middlewares:
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-console.log(path.join(__dirname, 'scss'),path.join(__dirname,'public/css'))
+console.log(path.join(__dirname, "scss"), path.join(__dirname, "public/css"));
 
-app.use(sassMiddleware({
-  src: path.join(__dirname, 'scss'),
-  dest: path.join(__dirname,'public'),
-  outputStyle: "compressed"
-}));
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(
+  sassMiddleware({
+    src: path.join(__dirname, "scss"),
+    dest: path.join(__dirname, "public"),
+    outputStyle: "compressed",
+  })
+);
+app.use(express.static(path.join(__dirname, "public")));
 
-app.use('/', homeRouter)
+app.use("/", homeRouter);
 app.use("/chat", chatRouter);
 
 // Setting up the socket:
