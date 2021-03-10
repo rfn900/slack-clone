@@ -1,0 +1,19 @@
+<div class="chat_body__header">
+  <div class="chatroom_details"></div>
+  <div class="chatroom_participants"></div>
+</div>
+<div class="chat_body__messages"></div>
+<div class="chat_body__input">
+  <form action="/send-chat-message" method="POST">
+    <div class="bolt-icon"><%- boltIcon %></div>
+    <input
+      class="chat-input"
+      type="text"
+      name="main-chat-input"
+      id="main-chat-input"
+      placeholder="Send message to chat"
+    />
+    <span>Aa</span> <%- atIcon %> <%- smileyIcon %> <%- paperclipIcon %>
+    <button id="chat-submit-button" disabled><%- paperplaneIcon %></button>
+  </form>
+</div>
