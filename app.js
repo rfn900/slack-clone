@@ -5,15 +5,14 @@ const socket = require("socket.io");
 const flash = require("flash");
 const session = require("session");
 const passport = require("passport");
-const expressEjsLayout = require("express-ejs-layouts")
 
-require('./config/passport')(passport)
+require("./config/passport")(passport);
 // styling with sassMiddleware
 const sassMiddleware = require("node-sass-middleware");
 
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
 const path = require("path");
 dotenv.config();
@@ -22,21 +21,22 @@ const io = socket(http);
 const server = http.Server(app);
 
 // Connecting with mongodb
-mongoose.connect('mongodb://localhost:27017/login')
-    .then(()=>console.log('connected to db')
-    .catch(error => console.log(error));
+mongoose
+  .connect("mongodb://localhost:27017/login")
+  .then(() => console.log("connected to db"))
+  .catch((error) => console.log(error));
 
 // Setting up our routes
 var homeRouter = require("./routes/home");
 var chatRouter = require("./routes/chat");
+var loginRouter = require("./routes/login");
+var signupRouter = require("./routes/signup");
 
 // Setting up view engine
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 // Middlewares:
-app.use(expressEjsLayout)
-
 app.use(express.urlencoded({ extended: false }));
 
 app.use(cookieParser());
@@ -53,6 +53,8 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", homeRouter);
 app.use("/chat", chatRouter);
+app.use("/login", loginRouter);
+app.use("/signup", signupRouter);
 
 // Setting up the socket:
 
