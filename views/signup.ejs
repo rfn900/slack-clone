@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up to Slack Clone</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="login-container">
+      <img src="images/slack.png" alt="" />
+
+      <h2>Fill the form bellow</h2>
+      <p>All fields required! Password fields must match.</p>
+      <form id="signupForm" action="/user-signup" method="POST">
+        <input
+          type="text"
+          name="signupName"
+          id="signupName"
+          placeholder="Your Name*"
+          autocomplete="off"
+        />
+        <input
+          type="email"
+          name="loginEmail"
+          id="loginEmail"
+          placeholder="Your Email*"
+          autocomplete="off"
+        />
+        <input
+          type="password"
+          name="loginPass"
+          id="loginPass"
+          placeholder="Password"
+        />
+        <input
+          type="password"
+          name="loginPassConfirmation"
+          id="loginPassConfirmation"
+          placeholder="Confirm Password"
+        />
+        <input
+          id="input-submit"
+          type="submit"
+          value="Sign In"
+          disabled="disabled"
+        />
+      </form>
+
+      <p class="create-account-box">
+        By continuing, you're agreeing to our Costumer Terms of Service, Privacy
+        Policy, and Cookie Policy
+      </p>
+    </div>
+    <script src="js/signup-script.js"></script>
+  </body>
+</html>
