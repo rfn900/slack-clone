@@ -1,18 +1,20 @@
 const express = require("express");
 const http = require("http");
-const app = express();
+const mongoose = require("mongoose");
 const socket = require("socket.io");
 const flash = require("flash");
 const session = require("session");
 const passport = require("passport");
 
+const app = express();
+
 require("./config/passport")(passport);
+
 // styling with sassMiddleware
 const sassMiddleware = require("node-sass-middleware");
 
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
-const mongoose = require("mongoose");
 
 const path = require("path");
 dotenv.config();
@@ -22,7 +24,10 @@ const server = http.Server(app);
 
 // Connecting with mongodb
 mongoose
-  .connect("mongodb://localhost:27017/login")
+  .connect("mongodb://localhost:27017/users", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => console.log("connected to db"))
   .catch((error) => console.log(error));
 
