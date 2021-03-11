@@ -26,6 +26,7 @@ const commentIcon = icon({ prefix: "far", iconName: "comment-dots" }).html;
 const chatIcon = icon({ prefix: "far", iconName: "comments" }).html;
 const bookmarkIcon = icon({ prefix: "far", iconName: "bookmark" }).html;
 const smileyIcon = icon({ prefix: "far", iconName: "smile" }).html;
+const starIcon = icon({ prefix: "far", iconName: "star" }).html;
 
 /* Adding GET method to homepage */
 
@@ -48,6 +49,7 @@ router.get("/", (req, res, next) => {
     paperclipIcon: paperclipIcon,
     boltIcon: boltIcon,
     paperplaneIcon: paperplaneIcon,
+    starIcon: starIcon,
   });
 });
 
