@@ -249,6 +249,27 @@ header {
       border-left: none;
       border-right: none;
       height: 80px;
+      padding: 20px;
+      .chatroom_details {
+        span {
+          font-weight: 700;
+          display: flex;
+          align-items: center;
+          svg {
+            margin-left: 10px;
+            width: 1em;
+
+            path {
+              fill: #888;
+            }
+          }
+        }
+        p {
+          color: #888;
+          margin-top: 5px;
+          font-size: 14px;
+        }
+      }
     }
 
     .chat_body__input {
@@ -266,15 +287,23 @@ header {
         .bolt-icon {
           display: flex;
           align-items: center;
-          padding: 0 10px;
+          padding: 0 4px;
 
           svg {
-            width: 0.85em;
+            width: 2.5em;
+            padding: 10px 14px;
 
             path {
               fill: none;
               stroke: #888;
               stroke-width: 40;
+            }
+            &:hover {
+              background-color: #1264a3;
+
+              path {
+                stroke: white;
+              }
             }
           }
         }
@@ -284,7 +313,7 @@ header {
           border-left: 1px dotted #aaa;
           height: 30px;
           padding: 0 10px;
-
+          outline: none;
           &::placeholder {
             font-size: 1rem;
             color: #aaa;
@@ -293,20 +322,30 @@ header {
 
         span {
           margin-left: auto;
-          margin-right: 8px;
+          margin-right: 4px;
           color: #949494;
           font-size: 20px;
+          padding: 4px;
+          cursor: pointer;
+          &:hover {
+            background-color: #f6f6f6;
+          }
         }
         svg {
-          margin: 0 8px;
-          width: 1em;
+          cursor: pointer;
+          margin: 0;
+          width: 2em;
+          padding: 8px;
           path {
             fill: #949494;
+          }
+          &:hover {
+            background-color: #f6f6f6;
           }
         }
         button {
           display: flex;
-          padding: 10px 4px;
+          padding: 4px;
           align-items: center;
           margin-right: 10px;
           background: none;
@@ -314,19 +353,32 @@ header {
           background: #218568;
           border-radius: 3px;
           transition: all 150ms ease-in-out;
-          cursor: pointer;
-          svg {
-            width: 1.2em;
+          // cursor: pointer;
+
+          &:hover {
+            background-color: #3a9279;
+          }
+
+          & > svg {
+            width: 2.4em;
             path {
               fill: #fff;
               transition: all 150ms ease-in-out;
+            }
+            &:hover {
+              background-color: #3a9279;
             }
           }
 
           &:disabled {
             background: none;
-
+            cursor: default;
             svg {
+              cursor: default;
+              width: 2.4em;
+              &:hover {
+                background-color: transparent;
+              }
               path {
                 fill: #aaa;
               }
