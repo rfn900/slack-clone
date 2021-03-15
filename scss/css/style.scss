@@ -24,6 +24,13 @@ body {
   color: white !important;
 }
 
+.input-error-message {
+  padding: 10px;
+  background-color: #f4f4f4;
+  color: #e91e63 !important;
+  margin-top: 10px;
+}
+
 header {
   position: relative;
   background-color: #340e36;
@@ -418,7 +425,7 @@ header {
   }
 
   form {
-    margin-top: 1em;
+    margin-top: 0;
     height: auto;
     width: 360px;
     display: flex;

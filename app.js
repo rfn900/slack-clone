@@ -5,7 +5,7 @@ const socket = require("socket.io");
 const flash = require("flash");
 const session = require("session");
 const passport = require("passport");
-
+const logger = require("morgan");
 const app = express();
 
 require("./config/passport")(passport);
@@ -24,7 +24,7 @@ const server = http.Server(app);
 
 // Connecting with mongodb
 mongoose
-  .connect("mongodb://localhost:27017/users", {
+  .connect("mongodb://localhost:27017/slack_clone", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -43,7 +43,7 @@ app.set("view engine", "ejs");
 
 // Middlewares:
 app.use(express.urlencoded({ extended: false }));
-
+app.use(logger("dev"));
 app.use(cookieParser());
 console.log(path.join(__dirname, "scss"), path.join(__dirname, "public/css"));
 

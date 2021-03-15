@@ -13,32 +13,41 @@
 
       <h2>Fill the form bellow</h2>
       <p>All fields required! Password fields must match.</p>
-      <form id="signupForm" action="/user-signup" method="POST">
+
+      <% if (typeof errors != 'undefined') {%> <% errors.forEach(err =>{ %>
+      <p class="input-error-message"><%=err.msg %></p>
+      <% })%> <% } %>
+
+      <form id="signupForm" action="/signup" method="POST">
         <input
           type="text"
-          name="signupName"
+          name="name"
           id="signupName"
           placeholder="Your Name*"
           autocomplete="off"
+          value="<%= typeof name != 'undefined' ? name : '' %>"
         />
         <input
           type="email"
-          name="loginEmail"
+          name="email"
           id="loginEmail"
           placeholder="Your Email*"
           autocomplete="off"
+          value="<%= typeof email != 'undefined' ? email : '' %>"
         />
         <input
           type="password"
-          name="loginPass"
+          name="password"
           id="loginPass"
           placeholder="Password"
+          value="<%= typeof password != 'undefined' ? password : '' %>"
         />
         <input
           type="password"
-          name="loginPassConfirmation"
+          name="passwordConfirm"
           id="loginPassConfirmation"
           placeholder="Confirm Password"
+          value="<%= typeof passwordConfirm != 'undefined' ? passwordConfirm : '' %>"
         />
         <input
           id="input-submit"
