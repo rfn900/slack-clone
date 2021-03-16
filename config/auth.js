@@ -4,7 +4,7 @@ module.exports = {
       return next();
     } else {
       request.flash("error_msg", "Please login to view this resource");
-      response.redirect("/login");
+      response.redirect("/users/login");
     }
   },
 };
