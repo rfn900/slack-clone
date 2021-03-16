@@ -1,15 +1,39 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
+const passport = require("passport");
 
 const User = require("../models/users");
-
 /* Adding GET method to homepage */
-router.get("/", (req, res) => {
+router.get("/login", (req, res) => {
+  if (req.isAuthenticated()) {
+    res.redirect("/");
+  }
+  res.render("login");
+});
+
+router.post("/login", (req, res, next) => {
+  passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/users/login",
+    failureFlash: true,
+  })(req, res, next);
+});
+
+router.get("/logout", (req, res, next) => {
+  req.logout();
+  req.flash("success_msg", "You are logged out");
+  res.redirect("/users/login");
+});
+
+router.get("/signup", (req, res) => {
+  if (req.isAuthenticated()) {
+    res.redirect("/");
+  }
   res.render("signup");
 });
 
-router.post("/", (req, res) => {
+router.post("/signup", (req, res) => {
   // console.log(req.body);
   const { name, email, password, passwordConfirm } = req.body;
 
@@ -60,7 +84,13 @@ router.post("/", (req, res) => {
             // Save user
             newUser
               .save()
-              .then((user) => res.redirect("/login"))
+              .then((user) => {
+                req.flash(
+                  "success_msg",
+                  "You are now registered and can log in"
+                );
+                res.redirect("/users/login");
+              })
               .catch((err) => console.log(err));
           })
         );
