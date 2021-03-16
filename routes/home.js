@@ -19,6 +19,7 @@ const caretRightIcon = icon({ prefix: "fas", iconName: "caret-right" }).html;
 const paperclipIcon = icon({ prefix: "fas", iconName: "paperclip" }).html;
 const boltIcon = icon({ prefix: "fas", iconName: "bolt" }).html;
 const paperplaneIcon = icon({ prefix: "fas", iconName: "paper-plane" }).html;
+const signOutAlt = icon({ prefix: "fas", iconName: "sign-out-alt" }).html;
 const questionIcon = icon({ prefix: "far", iconName: "question-circle" }).html;
 const clockIcon = icon({ prefix: "far", iconName: "clock" }).html;
 const editIcon = icon({ prefix: "far", iconName: "edit" }).html;
@@ -27,12 +28,13 @@ const chatIcon = icon({ prefix: "far", iconName: "comments" }).html;
 const bookmarkIcon = icon({ prefix: "far", iconName: "bookmark" }).html;
 const smileyIcon = icon({ prefix: "far", iconName: "smile" }).html;
 const starIcon = icon({ prefix: "far", iconName: "star" }).html;
-
+const { ensureAuthenticated } = require("../config/auth");
 /* Adding GET method to homepage */
 
-router.get("/", (req, res, next) => {
+router.get("/", ensureAuthenticated, (req, res, next) => {
   res.render("home", {
     title: "Welcome to Slack (the Clone)",
+    name: req.user.name,
     homeIcon: homeIcon,
     questionIcon: questionIcon,
     clockIcon: clockIcon,
@@ -50,6 +52,7 @@ router.get("/", (req, res, next) => {
     boltIcon: boltIcon,
     paperplaneIcon: paperplaneIcon,
     starIcon: starIcon,
+    signOutAlt: signOutAlt,
   });
 });
 
