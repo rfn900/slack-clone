@@ -2,25 +2,16 @@ const express = require("express");
 const http = require("http");
 const mongoose = require("mongoose");
 const socket = require("socket.io");
-const flash = require("flash");
-const session = require("session");
+const flash = require("connect-flash");
+const session = require("express-session");
 const passport = require("passport");
 const logger = require("morgan");
+const path = require("path");
+const sassMiddleware = require("node-sass-middleware");
+
 const app = express();
 
 require("./config/passport")(passport);
-
-// styling with sassMiddleware
-const sassMiddleware = require("node-sass-middleware");
-
-const cookieParser = require("cookie-parser");
-const dotenv = require("dotenv");
-
-const path = require("path");
-dotenv.config();
-
-const io = socket(http);
-const server = http.Server(app);
 
 // Connecting with mongodb
 mongoose
@@ -31,11 +22,40 @@ mongoose
   .then(() => console.log("connected to db"))
   .catch((error) => console.log(error));
 
+// Setting up sessions
+app.use(
+  session({
+    secret: "wet cat",
+    resave: true,
+    saveUninitialized: true,
+  })
+);
+
+// Passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Flash
+app.use(flash());
+app.use((req, res, next) => {
+  res.locals.success_msg = req.flash("success_msg");
+  res.locals.error_msg = req.flash("error_msg");
+  res.locals.error = req.flash("error");
+  next();
+});
+
+const cookieParser = require("cookie-parser");
+const dotenv = require("dotenv");
+
+dotenv.config();
+
+const io = socket(http);
+const server = http.Server(app);
+
 // Setting up our routes
 var homeRouter = require("./routes/home");
 var chatRouter = require("./routes/chat");
-var loginRouter = require("./routes/login");
-var signupRouter = require("./routes/signup");
+var usersRouter = require("./routes/users");
 
 // Setting up view engine
 app.set("views", path.join(__dirname, "views"));
@@ -58,8 +78,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", homeRouter);
 app.use("/chat", chatRouter);
-app.use("/login", loginRouter);
-app.use("/signup", signupRouter);
+app.use("/users", usersRouter);
 
 // Setting up the socket:
 
