@@ -19,4 +19,16 @@ document.addEventListener("DOMContentLoaded", (e) => {
     if (mainChatInput.value != "") chatSubmitBtn.removeAttribute("disabled");
     else chatSubmitBtn.setAttribute("disabled", true);
   });
+
+  const profileToggle = document.querySelector(".profile-toggle");
+  const logoutBox = document.querySelector(".logout-box");
+  profileToggle.addEventListener("click", (e) => {
+    logoutBox.classList.toggle("hide");
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!e.path.includes(logoutBox) && !e.path.includes(profileToggle)) {
+      logoutBox.classList.add("hide");
+    }
+  });
 });
