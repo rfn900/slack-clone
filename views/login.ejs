@@ -5,25 +5,28 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login Slack Clone</title>
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="../css/style.css" />
   </head>
   <body>
     <div class="login-container">
-      <img src="images/slack.png" alt="" />
+      <img src="../images/slack.png" alt="" />
 
       <h2>Sign in to Slack</h2>
       <p>Continue with your email address and password to sign in</p>
-      <form action="/login" method="POST" autocomplete="off">
+
+      <%- include('partials/messages') %>
+
+      <form action="/users/login" method="POST" autocomplete="off">
         <input
           type="text"
-          name="loginEmail"
+          name="email"
           id="loginEmail"
           placeholder="name@email.com"
           autocomplete="off"
         />
         <input
           type="password"
-          name="loginPass"
+          name="password"
           id="loginPass"
           placeholder="Password"
           autocomplete="off"
@@ -32,7 +35,7 @@
       </form>
 
       <p class="create-account-box">
-        New to slack? Create your account <a href="/signup">here</a>
+        New to slack? Create your account <a href="/users/signup">here</a>
       </p>
     </div>
   </body>

@@ -3,10 +3,6 @@
   <head>
     <title></title>
     <link rel="stylesheet" href="/css/style.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/solid.min.css"
-    />
   </head>
   <body>
     <header>
@@ -23,5 +19,16 @@
         </div>
         <%- questionIcon %>
       </div>
-      <img src="/images/profile-photo.png" alt="" />
+      <div class="profile-toggle tooltip">
+        <img src="/images/profile-photo.png" alt="" />
+        <%- arrowDown %>
+        <span class="tooltiptext"><%- name %> </span>
+      </div>
+      <div class="logout-box hide">
+        <ul>
+          <li><%- signOutAlt %> <a href="/users/logout">Logout</a></li>
+        </ul>
+      </div>
     </header>
+  </body>
+</html>
