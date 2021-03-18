@@ -1,5 +1,6 @@
-
-<script src="/js/script.js"></script>
+<% scriptsPath.forEach(path => { %>
+  <script src="<%- path %>"></script>
+<% }) %>
   </body>
   </html>
   
