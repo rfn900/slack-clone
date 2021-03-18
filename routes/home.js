@@ -14,7 +14,12 @@ router.get("/", ensureAuthenticated, async (req, res, next) => {
     view: "chat",
     name: user.name,
     profileImage: user.profileImage,
-    scriptsPath: ["/js/main-script.js", "/js/chat-script.js"],
+    scriptsPath: [
+      "/socket.io/socket.io.js",
+      "/js/socket-script.js",
+      "/js/main-script.js",
+      "/js/chat-script.js",
+    ],
     ...icons,
   });
 });

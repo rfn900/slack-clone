@@ -1,15 +1,17 @@
 const express = require("express");
-const http = require("http");
+
+const app = express();
+
+const http = require("http").createServer(app);
+const io = require("socket.io")(http);
+
 const mongoose = require("mongoose");
-const socket = require("socket.io");
 const flash = require("connect-flash");
 const session = require("express-session");
 const passport = require("passport");
 const logger = require("morgan");
 const path = require("path");
 const sassMiddleware = require("node-sass-middleware");
-
-const app = express();
 
 require("./config/passport")(passport);
 
@@ -49,8 +51,9 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-const io = socket(http);
-const server = http.Server(app);
+// const io = socket(http);
+// const server = http.Server(app);
+//const server = http.createServer(app);
 
 // Setting up our routes
 var homeRouter = require("./routes/home");
@@ -63,7 +66,7 @@ app.set("view engine", "ejs");
 
 // Middlewares:
 app.use(express.urlencoded({ extended: false }));
-app.use(logger("dev"));
+// app.use(logger("dev"));
 app.use(cookieParser());
 console.log(path.join(__dirname, "scss"), path.join(__dirname, "public/css"));
 
@@ -87,6 +90,7 @@ io.on("connection", (socket) => {
   console.log("User just connected");
 
   socket.on("chat message", (message) => {
+    console.log(`User writes: ${message}`);
     io.emit("chat message", message);
   });
 
@@ -98,6 +102,6 @@ io.on("connection", (socket) => {
 // Server starts listening:
 const port = process.env.PORT || 3000;
 
-server.listen(port, () =>
+http.listen(port, () =>
   console.log(`Server running on http://localhost:${port}`)
 );
