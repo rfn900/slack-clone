@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", (e) => {
   const toggleTitle = document.querySelectorAll(".toggle-title");
   const toggleH3 = document.querySelector(".toggle-h3");
 
+  // These event listeners apply to sidebar elements
   toggleTitle.forEach((item, index) => {
     item.addEventListener("click", (e) => {
       caretIconSpan[index].classList.toggle("rotate");
@@ -12,14 +13,7 @@ document.addEventListener("DOMContentLoaded", (e) => {
     });
   });
 
-  const mainChatInput = document.getElementById("main-chat-input");
-  const chatSubmitBtn = document.getElementById("chat-submit-button");
-  mainChatInput.addEventListener("keyup", (e) => {
-    console.log(mainChatInput.value);
-    if (mainChatInput.value != "") chatSubmitBtn.removeAttribute("disabled");
-    else chatSubmitBtn.setAttribute("disabled", true);
-  });
-
+  // These event listeners apply to header elements
   const profileToggle = document.querySelector(".profile-toggle");
   const logoutBox = document.querySelector(".logout-box");
   profileToggle.addEventListener("click", (e) => {
