@@ -23,22 +23,29 @@
       </form>
     </div>
     <div class="profile-body__right">
-      <div>
+      <div class="right-box-content">
         <h2>Here are your profile details</h2>
+
         <ul>
           <li>
-            <span>Name:</span> <%- name %>
-            <a class="edit-profile-link" href="">Edit</a>
+            <span class="bold-span">Name:</span>
+            <span class="content-span"><%- name %></span>
+            <a class="edit-profile-link" href="#">Edit</a>
           </li>
           <li>
-            <span>Email:</span> <%- email %><a class="edit-profile-link" href=""
-              >Edit</a
-            >
+            <span class="bold-span">Email:</span>
+            <span class="content-span"><%- email %></span
+            ><a class="edit-profile-link" href="#">Edit</a>
           </li>
-          <li><span>Joined in:</span> <%- date %></li>
+          <li>
+            <span class="bold-span">Joined in:</span>
+            <span class="content-span"><%- date %></span>
+          </li>
+          <%- include("../partials/messages") %>
           <p><a href="">Change Password?</a></p>
         </ul>
       </div>
     </div>
+    <div class="profile-back-button"><a href="/"><< Back to chat view</a></div>
   </div>
 </div>

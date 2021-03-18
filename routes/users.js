@@ -124,4 +124,21 @@ router.post(
   }
 );
 
+router.post("/edit", async (req, res) => {
+  try {
+    const userId = req.session.passport.user;
+    const user = await User.findOne({ _id: userId });
+
+    if (typeof req.body.name != "undefined") user.name = req.body.name;
+    if (typeof req.body.email != "undefined") user.email = req.body.email;
+
+    await user.save();
+    req.flash("success_msg", "Detail successfully updated");
+  } catch (error) {
+    req.flash("error_msg", "Unable to update user");
+    console.log(error);
+  }
+  res.redirect("/profile");
+});
+
 module.exports = router;

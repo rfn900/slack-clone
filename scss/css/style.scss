@@ -28,7 +28,6 @@ body {
 @mixin input-message {
   padding: 10px;
   background-color: #f4f4f4;
-
   margin-top: 10px;
 }
 .input-error-message {
@@ -36,7 +35,7 @@ body {
   color: #e91e63 !important;
 }
 
-.input-sucess-message {
+.input-success-message {
   @include input-message;
   color: #379158 !important;
 }
@@ -144,6 +143,7 @@ header {
 
   .logout-box {
     position: absolute;
+    z-index: 99;
     right: 5px;
     top: $headerHeight - 0.5vh;
     background-color: #fff;
@@ -483,6 +483,19 @@ header {
 
 .profile-container {
   width: 100%;
+  position: relative;
+
+  .profile-back-button {
+    position: absolute;
+    left: 0;
+    padding: 10px;
+
+    a {
+      color: indigo;
+      text-decoration: none;
+      font-weight: 900;
+    }
+  }
   .profile-body {
     width: 100%;
     display: flex;
@@ -492,9 +505,10 @@ header {
     &__left {
       display: flex;
       flex-direction: column;
-
+      margin-top: 40px;
       h1 {
         padding: 20px 10px 0 10px;
+        margin-bottom: 10px;
       }
       img {
         margin-bottom: 20px;
@@ -526,7 +540,7 @@ header {
       display: flex;
       justify-content: center;
 
-      div {
+      .right-box-content {
         margin: 100px 0 0 0;
         h2 {
           font-size: 32px;
@@ -535,18 +549,44 @@ header {
         ul {
           margin-top: 40px;
           li {
-            color: rgb(116, 111, 111);
             padding: 20px 0 5px 10px;
             margin-top: 15px;
             list-style: none;
             font-size: 20px;
             background-color: #fafafa;
             border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-            span {
+
+            form {
+              display: flex;
+              align-items: center;
+              input {
+                height: 49px;
+                border: none;
+                font-size: 20px;
+                padding-left: 10px;
+              }
+
+              input[type="submit"] {
+                padding: 0 10px;
+                cursor: pointer;
+                background-color: #f6b21c;
+                font-weight: 700;
+              }
+
+              a {
+                margin-left: auto;
+              }
+            }
+
+            .bold-span {
               margin-right: 10px;
               font-weight: 700;
               color: #313131;
             }
+            .content-span {
+              color: rgb(116, 111, 111);
+            }
+
             .edit-profile-link {
               display: none;
             }

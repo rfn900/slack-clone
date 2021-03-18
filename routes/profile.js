@@ -16,7 +16,7 @@ router.get("/", ensureAuthenticated, async (req, res, next) => {
     profileImage: user.profileImage,
     date: moment(user.date).format("MMMM Do, YYYY"),
     view: "profile",
-    scriptsPath: ["js/main-script.js"],
+    scriptsPath: ["js/main-script.js", "js/profile-script.js"],
     ...icons,
   });
 });
