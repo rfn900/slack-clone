@@ -20,12 +20,13 @@
         <%- questionIcon %>
       </div>
       <div class="profile-toggle tooltip">
-        <img src="/images/profile-photo.png" alt="" />
+        <img src="<%- profileImage %>" alt="" />
         <%- arrowDown %>
         <span class="tooltiptext"><%- name %> </span>
       </div>
       <div class="logout-box hide">
         <ul>
+          <li><%- profileIcon %> <a href="/profile">Profile</a></li>
           <li><%- signOutAlt %> <a href="/users/logout">Logout</a></li>
         </ul>
       </div>

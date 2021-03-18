@@ -1,9 +1,10 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&display=swap");
 $headerHeight: 5vh;
 
 html,
 body,
 * {
-  font-family: lato, sans-serif;
+  font-family: "Lato", sans-serif;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -147,7 +148,7 @@ header {
     top: $headerHeight - 0.5vh;
     background-color: #fff;
     width: 150px;
-    height: 100px;
+    // height: 100px;
     border-radius: 10px;
     border: none;
     box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.1);
@@ -208,18 +209,14 @@ header {
       border-right: none;
       height: 80px;
       align-items: center;
-      justify-content: space-around;
-      div {
-        display: flex;
-        align-items: center;
+      justify-content: center;
 
-        h2 {
-          font-size: 18px;
-          margin-right: 5px;
-        }
-        svg {
-          width: 10px;
-        }
+      h2 {
+        font-size: 18px;
+        margin-right: 5px;
+      }
+      svg {
+        width: 10px;
       }
 
       span {
@@ -480,6 +477,103 @@ header {
     }
   }
 }
+/********************************
+// Styles for the profile view
+*********************************/
+
+.profile-container {
+  width: 100%;
+  .profile-body {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    height: 100%;
+    &__left {
+      display: flex;
+      flex-direction: column;
+
+      h1 {
+        padding: 20px 10px 0 10px;
+      }
+      img {
+        margin-bottom: 20px;
+        object-fit: contain;
+        max-width: 360px;
+      }
+      form {
+        display: flex;
+        justify-content: center;
+        label {
+          background-color: indigo;
+          color: white;
+          padding: 1rem;
+          border-radius: 0.3rem;
+          cursor: pointer;
+          font-size: 22px;
+        }
+
+        svg {
+          width: 20px;
+          path {
+            fill: white;
+          }
+        }
+      }
+    }
+
+    &__right {
+      display: flex;
+      justify-content: center;
+
+      div {
+        margin: 100px 0 0 0;
+        h2 {
+          font-size: 32px;
+          font-weight: 700;
+        }
+        ul {
+          margin-top: 40px;
+          li {
+            color: rgb(116, 111, 111);
+            padding: 20px 0 5px 10px;
+            margin-top: 15px;
+            list-style: none;
+            font-size: 20px;
+            background-color: #fafafa;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            span {
+              margin-right: 10px;
+              font-weight: 700;
+              color: #313131;
+            }
+            .edit-profile-link {
+              display: none;
+            }
+            a {
+              float: right;
+              margin-right: 10px;
+              font-size: 16px;
+              text-decoration: none;
+              color: rgb(13, 69, 133);
+            }
+
+            &:hover .edit-profile-link {
+              display: inline-block;
+            }
+          }
+          p {
+            margin-top: 20px;
+            a {
+              font-size: 18px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 /********************************
 // Styles for the login page
 *********************************/

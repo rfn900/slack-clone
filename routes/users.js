@@ -3,13 +3,16 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const passport = require("passport");
 
+const { uploadPath, upload } = require("../utils/upload");
 const User = require("../models/users");
+
 /* Adding GET method to homepage */
 router.get("/login", (req, res) => {
   if (req.isAuthenticated()) {
     res.redirect("/");
+  } else {
+    res.render("login");
   }
-  res.render("login");
 });
 
 router.post("/login", (req, res, next) => {
@@ -98,5 +101,27 @@ router.post("/signup", (req, res) => {
     });
   }
 });
+
+router.post(
+  "/upload-profile-pic",
+  upload.single("profile_pic"),
+  async (req, res) => {
+    try {
+      const profile_pic = uploadPath + req.file.filename;
+      console.log(req.file);
+      if (req.file.size > 0) {
+        console.log(`File uploaded to ${profile_pic}`);
+
+        const userId = req.session.passport.user;
+        user = await User.findOne({ _id: userId });
+        user.profileImage = `uploads/${req.file.filename}`;
+        await user.save();
+        res.redirect("/profile");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
 
 module.exports = router;

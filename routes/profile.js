@@ -1,20 +1,22 @@
 const express = require("express");
 const router = express.Router();
-
-const User = require("../models/users");
+const moment = require("moment");
 
 const { ensureAuthenticated } = require("../config/auth");
 const icons = require("../utils/icons");
+
+const User = require("../models/users");
 
 router.get("/", ensureAuthenticated, async (req, res, next) => {
   const userId = req.session.passport.user;
   user = await User.findOne({ _id: userId });
   res.render("home", {
-    title: "Welcome to Slack (the Clone)",
-    view: "chat",
     name: user.name,
+    email: user.email,
     profileImage: user.profileImage,
-    scriptsPath: ["/js/main-script.js", "/js/chat-script.js"],
+    date: moment(user.date).format("MMMM Do, YYYY"),
+    view: "profile",
+    scriptsPath: ["js/main-script.js"],
     ...icons,
   });
 });

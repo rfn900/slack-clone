@@ -56,7 +56,7 @@ const server = http.Server(app);
 var homeRouter = require("./routes/home");
 var chatRouter = require("./routes/chat");
 var usersRouter = require("./routes/users");
-
+var profileRouter = require("./routes/profile");
 // Setting up view engine
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
@@ -79,6 +79,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", homeRouter);
 app.use("/chat", chatRouter);
 app.use("/users", usersRouter);
+app.use("/profile", profileRouter);
 
 // Setting up the socket:
 

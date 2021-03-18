@@ -1,0 +1,44 @@
+<div class="profile-container">
+  <div class="profile-body">
+    <div class="profile-body__left">
+      <h1>Hi, <%= name %></h1>
+      <img src="<%- profileImage %> " alt="" />
+      <form
+        action="/users/upload-profile-pic"
+        method="POST"
+        enctype="multipart/form-data"
+      >
+        <label for="file-upload-input" class="file-upload-label"
+          ><%- uploadIcon %> Change Picture</label
+        >
+        <input
+          type="file"
+          name="profile_pic"
+          id="file-upload-input"
+          hidden
+          onchange="this.form.submit()"
+        />
+        <br />
+        <!-- <input type="submit" value="Save" /> -->
+      </form>
+    </div>
+    <div class="profile-body__right">
+      <div>
+        <h2>Here are your profile details</h2>
+        <ul>
+          <li>
+            <span>Name:</span> <%- name %>
+            <a class="edit-profile-link" href="">Edit</a>
+          </li>
+          <li>
+            <span>Email:</span> <%- email %><a class="edit-profile-link" href=""
+              >Edit</a
+            >
+          </li>
+          <li><span>Joined in:</span> <%- date %></li>
+          <p><a href="">Change Password?</a></p>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

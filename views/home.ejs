@@ -1,12 +1,10 @@
 <%- include('block/header'); %>
 
 <div class="container">
-    <div class="sidebar">
-        <%- include('block/sidebar') %> 
-    </div>
-    <div class="chat_body">
-        <%- include('block/body') %> 
-    </div>
+  <div class="sidebar"><%- include('block/sidebar') %></div>
+  <% if (view === "chat") { %>
+  <div class="chat_body"><%- include('block/body') %></div>
+  <% } else if (view === "profile") {%> <%- include('block/profile') %> <% } %>
 </div>
 
 <%- include('block/footer'); %>
