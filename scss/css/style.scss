@@ -13,6 +13,9 @@ body,
 body {
   height: 100vh;
 }
+li {
+  list-style: none;
+}
 .hide {
   display: none !important;
 }

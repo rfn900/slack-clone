@@ -24,6 +24,9 @@ mongoose
   .then(() => console.log("connected to db"))
   .catch((error) => console.log(error));
 
+const User = require("./models/users");
+const Message = require("./models/messages");
+
 // Setting up sessions
 app.use(
   session({
@@ -57,7 +60,6 @@ dotenv.config();
 
 // Setting up our routes
 var homeRouter = require("./routes/home");
-var chatRouter = require("./routes/chat");
 var usersRouter = require("./routes/users");
 var profileRouter = require("./routes/profile");
 // Setting up view engine
@@ -67,8 +69,8 @@ app.set("view engine", "ejs");
 // Middlewares:
 app.use(express.urlencoded({ extended: false }));
 // app.use(logger("dev"));
+app.use(express.json());
 app.use(cookieParser());
-console.log(path.join(__dirname, "scss"), path.join(__dirname, "public/css"));
 
 app.use(
   sassMiddleware({
@@ -80,7 +82,6 @@ app.use(
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", homeRouter);
-app.use("/chat", chatRouter);
 app.use("/users", usersRouter);
 app.use("/profile", profileRouter);
 
@@ -88,15 +89,40 @@ app.use("/profile", profileRouter);
 
 io.on("connection", (socket) => {
   console.log("User just connected");
+  // console.log(socket);
 
-  socket.on("chat message", (message) => {
-    console.log(`User writes: ${message}`);
-    io.emit("chat message", message);
+  socket.on("chat message", async (message) => {
+    const userId = console.log(`User writes: ${message}`);
+    const user = await User.findOne({});
+    const arr = ["bunda", message];
+    io.emit("chat message", arr);
   });
 
   socket.on("disconnect", () => {
     console.log("A user disconnected");
   });
+});
+
+app.post("/messages", async (req, res, next) => {
+  const userId = req.session.passport.user;
+  const user = await User.findOne({ _id: userId });
+  const payload = {
+    userId: userId,
+    content: req.body.message,
+  };
+  var message = new Message(payload);
+  try {
+    await message.save();
+    io.emit("chat message", {
+      sender: user.name,
+      body: req.body.message,
+      profileImageSrc: user.profileImage,
+    });
+    res.sendStatus(200);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
 });
 
 // Server starts listening:
@@ -105,3 +131,5 @@ const port = process.env.PORT || 3000;
 http.listen(port, () =>
   console.log(`Server running on http://localhost:${port}`)
 );
+
+module.exports = io;
