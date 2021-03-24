@@ -12,6 +12,7 @@ const passport = require("passport");
 const logger = require("morgan");
 const path = require("path");
 const sassMiddleware = require("node-sass-middleware");
+const moment = require("moment");
 
 require("./config/passport")(passport);
 
@@ -68,7 +69,7 @@ app.set("view engine", "ejs");
 
 // Middlewares:
 app.use(express.urlencoded({ extended: false }));
-// app.use(logger("dev"));
+app.use(logger("dev"));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -91,12 +92,9 @@ io.on("connection", (socket) => {
   console.log("User just connected");
   // console.log(socket);
 
-  socket.on("chat message", async (message) => {
-    const userId = console.log(`User writes: ${message}`);
-    const user = await User.findOne({});
-    const arr = ["bunda", message];
-    io.emit("chat message", arr);
-  });
+  // socket.on("chat message", async (message) => {
+  //   io.emit("chat message", "arr");
+  // });
 
   socket.on("disconnect", () => {
     console.log("A user disconnected");
@@ -110,18 +108,91 @@ app.post("/messages", async (req, res, next) => {
     userId: userId,
     content: req.body.message,
   };
-  var message = new Message(payload);
+  var mostRecentMsg = await Message.findOne(
+    {},
+    {},
+    {
+      sort: { date: -1 },
+    }
+  );
+
+  let message = new Message(payload);
+  let needNewDay = true;
+  // Don't need to write out a new d ay if there is a message already today
+  if (mostRecentMsg) {
+    needNewDay =
+      moment(mostRecentMsg.date).format("MMMM Do, YYYY") !=
+      moment(message.date).format("MMMM Do, YYYY");
+  }
+
+  console.log(needNewDay);
+  var todaysDate = moment(new Date()).format("MMMM Do, YYYY");
+
   try {
     await message.save();
     io.emit("chat message", {
       sender: user.name,
       body: req.body.message,
       profileImageSrc: user.profileImage,
+      hour: moment(message.date).format("HH:mm"),
+      newDay: needNewDay ? moment(message.date).format("MMMM Do, YYYY") : null,
+      _id: message._id,
     });
     res.sendStatus(200);
   } catch (error) {
     console.log(error);
     res.sendStatus(500);
+  }
+});
+
+app.post("/messages/reaction", async (req, res) => {
+  const { emoji, _id } = req.body;
+  const message = await Message.findOne({ _id: _id });
+  // console.log(message.reactions);
+  let emojiCount = 0;
+  if (message.reactions.length > 0) {
+    message.reactions.forEach(async (reaction) => {
+      if (reaction.emoji == emoji) {
+        emojiCount = reaction.count;
+        try {
+          await Message.updateOne(
+            {
+              _id: _id,
+              "reactions.emoji": emoji,
+            },
+            { $inc: { "reactions.$.count": 1 } }
+          );
+          io.emit("emoji", {
+            emoji: reaction.emoji,
+            count: reaction.count + 1,
+            messageId: message._id,
+          });
+          res.sendStatus(200);
+        } catch (error) {
+          throw error;
+        }
+      }
+    });
+  }
+
+  if (emojiCount == 0) {
+    message.reactions.push({
+      emoji: emoji,
+      count: 1,
+    });
+    try {
+      await message.save();
+
+      io.emit("emoji", {
+        emoji: emoji,
+        count: 1,
+        messageId: message._id,
+      });
+
+      res.sendStatus(200);
+    } catch (error) {
+      res.sendStatus(500);
+    }
   }
 });
 

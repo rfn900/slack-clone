@@ -10,7 +10,7 @@ const MessagesSchema = new mongoose.Schema({
     type: mongoose.ObjectId,
     required: true,
   },
-
+  reactions: [Object],
   date: {
     type: Date,
     default: Date.now,

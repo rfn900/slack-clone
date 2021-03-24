@@ -5,6 +5,16 @@
   <% if (view === "chat") { %>
   <div class="chat_body"><%- include('block/body') %></div>
   <% } else if (view === "profile") {%> <%- include('block/profile') %> <% } %>
+  <div id="emoji-list-box" class="hide emoji-box">
+    <input
+      type="text"
+      name="search-emoji"
+      placeholder="Search emojis here..."
+      class="search-emoji"
+      id="search-emoji"
+    />
+    <ul id="emoji-list"></ul>
+  </div>
 </div>
 
 <%- include('block/footer'); %>
