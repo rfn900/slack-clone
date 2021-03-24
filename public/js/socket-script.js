@@ -33,20 +33,18 @@ document.addEventListener("DOMContentLoaded", (e) => {
       li.style.paddingTop = "20px";
     }
     messagesUl.appendChild(li);
-    const emojiUl = document.getElementById(`${msg._id}-full-emoji-list`)
-    const searchEmoji = document.getElementById(`${msg._id}-search-emoji`)
-    const emojiDiv = document.getElementById(`${msg._id}-full-emoji-div`)
-    const emojiBtn = document.getElementById(`${msg._id}-emoji-btn`).firstChild.firstChild
-    loadEmojis(emojiUl)
-    filterEmojis(searchEmoji, emojiUl)
-    closeEmojiBoxOnClick(emojiBtn, emojiDiv)
+    const emojiUl = document.getElementById(`${msg._id}-full-emoji-list`);
+    const searchEmoji = document.getElementById(`${msg._id}-search-emoji`);
+    const emojiDiv = document.getElementById(`${msg._id}-full-emoji-div`);
+    const emojiBtn = document.getElementById(`${msg._id}-emoji-btn`).firstChild
+      .firstChild;
+    loadEmojis(emojiUl);
+    filterEmojis(searchEmoji, emojiUl);
+    closeEmojiBoxOnClick(emojiBtn, emojiDiv);
     // console.log(emojiBtn)
-
-
   });
 
   const formatedMessage = (msgObject) => {
-   
     var { sender, body, profileImageSrc, hour, newDay, _id } = msgObject;
     const p = newDay ? `<p>${newDay}</p>` : "";
     const formatedContent = `${p}<div class="li-content" id="${_id}"><img src="${profileImageSrc}"/>
@@ -68,7 +66,6 @@ document.addEventListener("DOMContentLoaded", (e) => {
 
     return formatedContent;
   };
-    
 
   messagesUl.addEventListener("click", async (e) => {
     const isClickFromEmojiElement = Array.from(e.target.classList).includes(
@@ -79,10 +76,10 @@ document.addEventListener("DOMContentLoaded", (e) => {
     );
 
     if (isClickToExpandEmojiList) {
-      
-    let messageId = e.path[4].id.split("-")[0];
-     console.log(messagesUl.children[0].children)
-      document.getElementById(`${messageId}-full-emoji-div`).classList.toggle("hide")
+      let messageId = e.path[4].id.split("-")[0];
+      document
+        .getElementById(`${messageId}-full-emoji-div`)
+        .classList.toggle("hide");
     }
 
     if (isClickFromEmojiElement) {
@@ -122,6 +119,4 @@ document.addEventListener("DOMContentLoaded", (e) => {
     if (!foundReaction)
       reactionDiv.innerHTML += `<div class="reaction-count"><span class="reaction-span reactions-display">${emoji} ${count}</span>`;
   });
-
-  
 });
