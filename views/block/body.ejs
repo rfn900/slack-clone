@@ -7,15 +7,21 @@
 </div>
 <div class="chat_body__messages">
   <ul id="messages">
-    <% if (messages!=-1) { %> <% messages.forEach((message, index)=> { %>
+    <% if (messages!=-1) { %> <% messages.forEach((message, index)=> { %> 
 
-    <li>
+      <% if(writeHeaderDate[index]) { %>
+        <li style="border-top: 1px dotted rgb(204, 204, 204); padding-top: 20px;">
+        <p><%- date[index].day %></p>
+      <% } else {%>
+        <li>
+      <% } %>
+
       <div class="li-content" id="<%- message._id %>">
         <img src="<%- senders[index].profileImage %> " />
         <div class="message-container">
           <div class="message-header">
             <span class="message-sender"> <%- senders[index].name %> </span
-            ><span class="message-hour"> <%- message.date %> </span>
+            ><span class="message-hour"> <%- date[index].hour %> </span>
           </div>
           <div class="message-content"><%- message.content %></div>
           <div id="<%- message._id %>-reactions" class="emoji-list">

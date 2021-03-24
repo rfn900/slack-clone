@@ -15,7 +15,7 @@ const sassMiddleware = require("node-sass-middleware");
 const moment = require("moment");
 
 require("./config/passport")(passport);
-
+const { isFirstMsgToday } = require("./utils/checkLatestMsg");
 // Connecting with mongodb
 mongoose
   .connect("mongodb://localhost:27017/slack_clone", {
@@ -69,7 +69,7 @@ app.set("view engine", "ejs");
 
 // Middlewares:
 app.use(express.urlencoded({ extended: false }));
-app.use(logger("dev"));
+// app.use(logger("dev"));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -90,11 +90,6 @@ app.use("/profile", profileRouter);
 
 io.on("connection", (socket) => {
   console.log("User just connected");
-  // console.log(socket);
-
-  // socket.on("chat message", async (message) => {
-  //   io.emit("chat message", "arr");
-  // });
 
   socket.on("disconnect", () => {
     console.log("A user disconnected");
@@ -108,26 +103,10 @@ app.post("/messages", async (req, res, next) => {
     userId: userId,
     content: req.body.message,
   };
-  var mostRecentMsg = await Message.findOne(
-    {},
-    {},
-    {
-      sort: { date: -1 },
-    }
-  );
 
   let message = new Message(payload);
-  let needNewDay = true;
-  // Don't need to write out a new d ay if there is a message already today
-  if (mostRecentMsg) {
-    needNewDay =
-      moment(mostRecentMsg.date).format("MMMM Do, YYYY") !=
-      moment(message.date).format("MMMM Do, YYYY");
-  }
-
-  console.log(needNewDay);
-  var todaysDate = moment(new Date()).format("MMMM Do, YYYY");
-
+  // console.log(await isNewDay(message), "aqui");
+  let checkNewDay = await isFirstMsgToday(message);
   try {
     await message.save();
     io.emit("chat message", {
@@ -135,7 +114,7 @@ app.post("/messages", async (req, res, next) => {
       body: req.body.message,
       profileImageSrc: user.profileImage,
       hour: moment(message.date).format("HH:mm"),
-      newDay: needNewDay ? moment(message.date).format("MMMM Do, YYYY") : null,
+      newDay: checkNewDay ? moment(message.date).format("MMMM Do, YYYY") : null,
       _id: message._id,
     });
     res.sendStatus(200);
