@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", (e) => {
     const emojiDiv = document.getElementById(`${msg._id}-full-emoji-div`);
     const emojiBtn = document.getElementById(`${msg._id}-emoji-btn`).firstChild
       .firstChild;
-    loadEmojis(emojiUl);
+    // console.log(emojiUl);
     filterEmojis(searchEmoji, emojiUl);
     closeEmojiBoxOnClick(emojiBtn, emojiDiv);
     // console.log(emojiBtn)
@@ -77,19 +77,25 @@ document.addEventListener("DOMContentLoaded", (e) => {
 
     if (isClickToExpandEmojiList) {
       let messageId = e.path[4].id.split("-")[0];
-      document
-        .getElementById(`${messageId}-full-emoji-div`)
-        .classList.toggle("hide");
+      let div = document.getElementById(`${messageId}-full-emoji-div`);
+      let ul = document.getElementById(`${messageId}-full-emoji-list`);
+      const emojiBtn = document.getElementById(`${messageId}-emoji-btn`)
+        .firstChild.children[0];
+      const searchEmoji = document.getElementById(`${messageId}-search-emoji`);
+      console.log(emojiBtn == e.target);
+      loadEmojis(ul);
+      filterEmojis(searchEmoji, ul);
+      closeEmojiBoxOnClick(emojiBtn, div);
+      div.classList.toggle("hide");
     }
 
     if (isClickFromEmojiElement) {
       let messageId = e.path[2].id.split("-")[0];
-
       const data = {
         emoji: e.target.innerText.split(" ")[0],
         _id: messageId,
       };
-
+      console.log(data);
       await fetch("http://localhost:3000/messages/reaction", {
         method: "POST",
         headers: {
@@ -110,12 +116,14 @@ document.addEventListener("DOMContentLoaded", (e) => {
     let foundReaction = false;
     allReactions.forEach((div) => {
       //Just add to count in case of an existing reaction-emoji
-      if (div.firstChild.innerText == `${emoji} ${count - 1}`) {
-        div.firstChild.innerText = `${emoji} ${count}`;
+      console.log(div.innerText == `${emoji} ${count - 1}`);
+      if (div.innerText == `${emoji} ${count - 1}`) {
+        div.innerHTML = `<span class="reaction-span">${emoji} ${count}</span>`;
+
         foundReaction = true;
       }
     });
-    // console.log(foundReaction);
+    console.log(foundReaction);
     if (!foundReaction)
       reactionDiv.innerHTML += `<div class="reaction-count"><span class="reaction-span reactions-display">${emoji} ${count}</span>`;
   });

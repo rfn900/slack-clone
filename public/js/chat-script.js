@@ -11,18 +11,15 @@ document.addEventListener("DOMContentLoaded", (e) => {
   const emojiBox = document.getElementById("emoji-list-box");
   const searchEmoji = document.getElementById("search-emoji");
 
-   
-
   emojiBtn.addEventListener("click", (e) => {
+    loadEmojis(emojiUl);
     emojiBox.classList.toggle("hide");
-
   });
 
-//These functions are defined in emoji.js
-  loadEmojis(emojiUl)
-  filterEmojis(searchEmoji, emojiUl)
-  closeEmojiBoxOnClick(emojiBtn, emojiBox)
-  
+  //These functions are defined in emoji.js
+
+  filterEmojis(searchEmoji, emojiUl);
+  closeEmojiBoxOnClick(emojiBtn, emojiBox);
 
   document.addEventListener("keydown", (e) => {
     if (event.keyCode == 27) {
@@ -40,7 +37,6 @@ document.addEventListener("DOMContentLoaded", (e) => {
       loadEmojis(emojiUl);
       if (mainChatInput.value != "") chatSubmitBtn.removeAttribute("disabled");
       else chatSubmitBtn.setAttribute("disabled", true);
-      
     }
   });
 });

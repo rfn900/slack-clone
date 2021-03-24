@@ -1631,42 +1631,39 @@ const svgs = {
     '<svg  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="1.4em" height="1.4em" style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 256 256"><path class="emoji-list-button-svg" d="M224 128a96 96 0 1 1-96-96a96 96 0 0 1 96 96z" opacity=".2" fill="#626262"/><path d="M128 24a104 104 0 1 0 104 104A104.118 104.118 0 0 0 128 24zm0 192a88 88 0 1 1 88-88a88.1 88.1 0 0 1-88 88zm48.503-59.998a56.029 56.029 0 0 1-97.006.001a8 8 0 0 1 13.85-8.012a40.195 40.195 0 0 0 19.086 16.866a39.96 39.96 0 0 0 43.851-8.577a40.182 40.182 0 0 0 6.37-8.29a8 8 0 0 1 13.849 8.012zM80 108a12 12 0 1 1 12 12a12 12 0 0 1-12-12zm104 0a8 8 0 0 1-8 8h-24a8 8 0 0 1 0-16h24a8 8 0 0 1 8 8z" fill="#626262"/></svg>',
 };
 
-function filterEmojis(input, ul){
-
+function filterEmojis(input, ul) {
   input.addEventListener("keyup", (e) => {
-    
     const filteredKeys = Object.keys(emojis).filter((emojiKey) => {
       ul.innerHTML = "";
-      
-        return emojiKey.includes(e.target.value);
-      });
+
+      return emojiKey.includes(e.target.value);
+    });
 
     filteredKeys.forEach((key) => {
       const li = document.createElement("li");
-      li.className = "reaction-span"
+      li.className = "reaction-span";
 
       li.innerText = emojis[key];
       ul.appendChild(li);
     });
-  })
+  });
 }
 
- function loadEmojis(ul){
+function loadEmojis(ul) {
+  console.log(ul);
+  Object.values(emojis).forEach((emoji) => {
+    const li = document.createElement("li");
+    li.className = "reaction-span";
 
-    Object.values(emojis).forEach((emoji) => {
-      const li = document.createElement("li");
-        li.className = "reaction-span"
-        
-        
-      li.innerText = emoji;
-      ul.appendChild(li);
-    });
- }
+    li.innerText = emoji;
+    ul.appendChild(li);
+  });
+}
 
- function closeEmojiBoxOnClick(btn,box){
+function closeEmojiBoxOnClick(btn, box) {
   document.addEventListener("click", (e) => {
     if (e.target != btn && !e.path.includes(box)) {
       box.classList.add("hide");
     }
   });
- }
+}
