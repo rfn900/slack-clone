@@ -55,21 +55,20 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-// const io = socket(http);
-// const server = http.Server(app);
-//const server = http.createServer(app);
-
 // Setting up our routes
 var homeRouter = require("./routes/home");
 var usersRouter = require("./routes/users");
 var profileRouter = require("./routes/profile");
+var roomsRouter = require("./routes/room");
+
+const { clearLine } = require("readline");
 // Setting up view engine
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 // Middlewares:
 app.use(express.urlencoded({ extended: false }));
-// app.use(logger("dev"));
+app.use(logger("dev"));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -85,99 +84,94 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", homeRouter);
 app.use("/users", usersRouter);
 app.use("/profile", profileRouter);
+app.use("/room", roomsRouter);
 
 // Setting up the socket:
 
 io.on("connection", (socket) => {
   console.log("User just connected");
 
+  socket.on("chat message", async (payload) => {
+    console.log(payload);
+    const { content, userId } = payload;
+    const user = await User.findOne({ _id: userId });
+
+    let message = new Message(payload);
+
+    let checkNewDay = await isFirstMsgToday(message);
+
+    try {
+      await message.save();
+      io.emit("chat message", {
+        sender: user.name,
+        body: content,
+        profileImageSrc: `../${user.profileImage}`,
+        hour: moment(message.date).format("HH:mm"),
+        newDay: checkNewDay
+          ? moment(message.date).format("MMMM Do, YYYY")
+          : null,
+        _id: message._id,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  socket.on("emoji", async (data) => {
+    const { emoji, _id } = data;
+    const message = await Message.findOne({ _id: _id });
+
+    let emojiCount = 0;
+    if (message.reactions.length > 0) {
+      message.reactions.forEach(async (reaction) => {
+        if (reaction.emoji == emoji) {
+          emojiCount = reaction.count;
+          try {
+            await Message.updateOne(
+              {
+                _id: _id,
+                "reactions.emoji": emoji,
+              },
+              { $inc: { "reactions.$.count": 1 } }
+            );
+            io.emit("emoji", {
+              emoji: reaction.emoji,
+              count: reaction.count + 1,
+              messageId: message._id,
+            });
+          } catch (error) {
+            throw error;
+          }
+        }
+      });
+    }
+
+    if (emojiCount == 0) {
+      message.reactions.push({
+        emoji: emoji,
+        count: 1,
+      });
+      try {
+        await message.save();
+
+        io.emit("emoji", {
+          emoji: emoji,
+          count: 1,
+          messageId: message._id,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  });
+
   socket.on("disconnect", () => {
     console.log("A user disconnected");
   });
 });
 
-app.post("/messages", async (req, res, next) => {
-  const userId = req.session.passport.user;
-  const user = await User.findOne({ _id: userId });
-  const payload = {
-    userId: userId,
-    content: req.body.message,
-  };
-
-  let message = new Message(payload);
-  // console.log(await isNewDay(message), "aqui");
-  let checkNewDay = await isFirstMsgToday(message);
-  try {
-    await message.save();
-    io.emit("chat message", {
-      sender: user.name,
-      body: req.body.message,
-      profileImageSrc: user.profileImage,
-      hour: moment(message.date).format("HH:mm"),
-      newDay: checkNewDay ? moment(message.date).format("MMMM Do, YYYY") : null,
-      _id: message._id,
-    });
-    res.sendStatus(200);
-  } catch (error) {
-    console.log(error);
-    res.sendStatus(500);
-  }
-});
-
-app.post("/messages/reaction", async (req, res) => {
-  const { emoji, _id } = req.body;
-  const message = await Message.findOne({ _id: _id });
-  // console.log(message.reactions);
-  let emojiCount = 0;
-  if (message.reactions.length > 0) {
-    message.reactions.forEach(async (reaction) => {
-      if (reaction.emoji == emoji) {
-        emojiCount = reaction.count;
-        try {
-          await Message.updateOne(
-            {
-              _id: _id,
-              "reactions.emoji": emoji,
-            },
-            { $inc: { "reactions.$.count": 1 } }
-          );
-          io.emit("emoji", {
-            emoji: reaction.emoji,
-            count: reaction.count + 1,
-            messageId: message._id,
-          });
-          res.sendStatus(200);
-        } catch (error) {
-          throw error;
-        }
-      }
-    });
-  }
-
-  if (emojiCount == 0) {
-    message.reactions.push({
-      emoji: emoji,
-      count: 1,
-    });
-    try {
-      await message.save();
-
-      io.emit("emoji", {
-        emoji: emoji,
-        count: 1,
-        messageId: message._id,
-      });
-
-      res.sendStatus(200);
-    } catch (error) {
-      res.sendStatus(500);
-    }
-  }
-});
-
 // Server starts listening:
 const port = process.env.PORT || 3000;
-
-http.listen(port, () =>
+http.listen(3000, () =>
   console.log(`Server running on http://localhost:${port}`)
 );

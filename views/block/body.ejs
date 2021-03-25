@@ -1,6 +1,6 @@
 <div class="chat_body__header">
   <div class="chatroom_details">
-    <span>#backend-1 <%- starIcon %></span>
+    <span><%- roomName %>  <%- starIcon %></span>
     <p>Small description here</p>
   </div>
   <div class="chatroom_participants"></div>
@@ -17,7 +17,7 @@
       <% } %>
 
       <div class="li-content" id="<%- message._id %>">
-        <img src="<%- senders[index].profileImage %> " />
+        <img src="../<%- senders[index].profileImage %> " />
         <div class="message-container">
           <div class="message-header">
             <span class="message-sender"> <%- senders[index].name %> </span
@@ -118,4 +118,6 @@
     <button id="chat-submit-button" disabled><%- paperplaneIcon %></button>
   </form>
 </div>
-<script></script>
+<script> 
+  const currentUserId = "<%- userId %>" 
+</script>

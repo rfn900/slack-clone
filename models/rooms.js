@@ -1,26 +1,27 @@
 const mongoose = require("mongoose");
 
-const MessagesSchema = new mongoose.Schema({
-  content: {
+const RoomsSchema = new mongoose.Schema({
+  name: {
     type: String,
     required: true,
   },
 
-  userId: {
+  createdBy: {
     type: mongoose.ObjectId,
     required: true,
   },
-  reactions: [Object],
-  roomId: {
-    type: mongoose.ObjectId,
+
+  private: {
+    type: Boolean,
     required: true,
   },
+
   date: {
     type: Date,
     default: Date.now,
   },
 });
 
-const Messages = mongoose.model("Messages", MessagesSchema);
+const Rooms = mongoose.model("Rooms", RoomsSchema);
 
-module.exports = Messages;
+module.exports = Rooms;

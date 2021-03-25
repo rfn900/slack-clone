@@ -4,22 +4,20 @@ document.addEventListener("DOMContentLoaded", (e) => {
   const chatInput = document.getElementById("main-chat-input");
   const messagesUl = document.getElementById("messages");
   const chatSubmitBtn = document.getElementById("chat-submit-button");
-
+  const scrollDiv = document.querySelector(".chat_body__messages");
+  console.log(currentUserId);
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-
-    const data = {
-      message: chatInput.value,
+    const roomId = window.location.pathname.split("/")[2];
+    const payload = {
+      content: chatInput.value,
+      userId: currentUserId,
+      roomId: roomId,
     };
-    await fetch("http://localhost:3000/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+    socket.emit("chat message", payload);
 
     chatInput.value = "";
+    scrollDiv.scrollTop = scrollDiv.scrollHeight;
     chatSubmitBtn.setAttribute("disabled", "true");
     return false;
   });
@@ -96,13 +94,8 @@ document.addEventListener("DOMContentLoaded", (e) => {
         _id: messageId,
       };
       console.log(data);
-      await fetch("http://localhost:3000/messages/reaction", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+
+      socket.emit("emoji", data);
     }
   });
 
