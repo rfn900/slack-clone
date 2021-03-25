@@ -240,6 +240,59 @@ header {
   height: 100vh-$headerHeight;
   width: 100%;
   display: flex;
+
+  .dashboard-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+
+    .dashboard {
+      padding: 100px 50px;
+      box-shadow: 10px 3px 20px rgba(0, 0, 0, 0.04);
+
+      h2 {
+        font-size: 42px;
+      }
+
+      h3 {
+        font-size: 38px;
+        margin-bottom: 20px;
+      }
+
+      form {
+        * {
+          margin: 20px 0;
+        }
+        label {
+          font-size: 26px;
+        }
+
+        input {
+          margin-right: 10px;
+        }
+        input[type="text"] {
+          background-color: #f4f4f4;
+          border: none;
+          padding: 16px;
+          margin-left: 10px;
+        }
+
+        input[type="submit"] {
+          background-color: #340e36;
+          border: none;
+          padding: 10px 20px;
+          color: #fff;
+          font-size: 24px;
+          cursor: pointer;
+
+          &:hover {
+            background-color: #4b104e;
+          }
+        }
+      }
+    }
+  }
   .sidebar {
     overflow-y: overlay;
     flex: 1;
@@ -475,7 +528,7 @@ header {
             padding: 10px 25px 15px 25px;
             position: relative;
 
-            .emoji-box{
+            .emoji-box {
               top: -40px;
               right: 40px;
               height: 300px;
