@@ -22,6 +22,13 @@ router.get("/logout", (req, res, next) => {
   res.redirect("/users/login");
 });
 
+router.get("/signup", (req, res) => {
+  if (req.isAuthenticated()) {
+    res.redirect("/");
+  }
+  res.render("signup");
+});
+
 router.get("/:username", async (req, res) => {
   const users = await User.find();
   user = users.filter((usr) => usr.name.includes(req.params.username));
@@ -35,13 +42,6 @@ router.post("/login", (req, res, next) => {
     failureRedirect: "/users/login",
     failureFlash: true,
   })(req, res, next);
-});
-
-router.get("/signup", (req, res) => {
-  if (req.isAuthenticated()) {
-    res.redirect("/");
-  }
-  res.render("signup");
 });
 
 router.post("/signup", (req, res) => {
