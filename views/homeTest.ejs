@@ -5,16 +5,13 @@
 
   <div class="dashboard-container">
     <div class="dashboard">
-        <!-- <h2>You are currently registered in 1 chat-room:</h2>
-        <ul>
-            <li><a href="room/605bc7289430b53b822e56e2">Backend-1</a></li>
-        </ul> -->
+ 
         <h3>Create your own chat room here:</h2>
         <form action="room/create" method="post">
             <label for="room-name">Enter The Room Name:</label>
             <input type="text" name="roomName" id="room-name-input" placeholder="MyCoolChatRoom-1" required><br>
-            <input type="checkbox" id="private-room-input" name="isRoomPrivate">
-            <label for="private">I want my chat room to be private (invited members only)</label><br />
+            <input class="hide" type="checkbox" id="private-room-input" name="isRoomPrivate">
+            <label class="hide" for="private">I want my chat room to be private (invited members only)</label><br />
             
 
             <input type="submit" value="Create Chatroom">

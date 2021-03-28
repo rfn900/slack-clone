@@ -1,0 +1,23 @@
+<%- include('block/header'); %>
+
+<div class="container">
+    <div class="sidebar"><%- include('block/sidebar') %></div>
+    <div class="mentions-container">
+
+      <h1>This is public Chats!</h1>
+      <div class="mentions-message">
+        <% messages.forEach((msg,index) => { %>
+         
+           <div class="mention-sender"><%- senders[index].name %> mentioned you in a message:</div>
+           <div class="mention-content"><%- msg.content %> <span>@<%- name %> </span></div>
+           <div class="mention-date"><%- days[index] %> at <%- hours[index] %> </div>
+           
+        
+        <% }) %>
+    
+      </div>
+    </div>
+</div>
+
+  
+<%- include('block/footer'); %>

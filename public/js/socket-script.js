@@ -5,8 +5,50 @@ document.addEventListener("DOMContentLoaded", (e) => {
   const messagesUl = document.getElementById("messages");
   const chatSubmitBtn = document.getElementById("chat-submit-button");
   let editBtn = Array.from(document.getElementsByClassName("edit-icon"));
+  const mentionBtn = document.getElementById("mentions-span");
   const deleteBtn = Array.from(document.getElementsByClassName("delete-icon"));
   console.log(username, room);
+  const mentionsBox = document.getElementById("mentions-box");
+
+  const ul = document.createElement("ul");
+  const mentionsResult = document.getElementById("mentions-results");
+
+  mentionBtn.addEventListener("click", (e) => {
+    mentionsBox.classList.toggle("hide");
+  });
+  document
+    .getElementById("mentions-input")
+    .addEventListener("keyup", async (e) => {
+      if (e.target.value.length >= 3) {
+        ul.innerHTML = "";
+        const res = await fetch(`/users/${e.target.value}`);
+        const data = await res.json();
+        data.forEach((entry) => {
+          console.log(entry);
+          const li = document.createElement("li");
+          li.innerHTML = `@${entry.name}`;
+          li.style.color = "darkblue";
+          li.className = "mention-li";
+          li.setAttribute("name", `mention-${entry.name}`);
+          li.setAttribute("_id", `${entry._id}`);
+          ul.appendChild(li);
+        });
+        mentionsBox.appendChild(ul);
+      }
+    });
+  ul.addEventListener("click", (e) => {
+    console.log(e.target.classList);
+
+    if (Array.from(e.target.classList).includes("mention-li")) {
+      const name = e.target.getAttribute("name").split("-")[1];
+      const mentionedId = e.target.getAttribute("_id");
+      if (!mentionsResult.innerText.includes(name))
+        mentionsResult.innerHTML += `<span _id="${mentionedId}">@${name}</span>`;
+      document.getElementById("mentions-input").value = "";
+      ul.innerHTML = "";
+      mentionsBox.classList.add("hide");
+    }
+  });
 
   socket.emit("join room", { username, currentUserId, room, roomId });
   const scrollDiv = document.getElementById("messages-container");
@@ -15,10 +57,16 @@ document.addEventListener("DOMContentLoaded", (e) => {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const roomId = window.location.pathname.split("/")[2];
+    const mentions = Array.from(mentionsResult.children).map((mention) =>
+      mention.getAttribute("_id")
+    );
+
+    mentionsResult.innerHTML = "";
     const payload = {
       content: chatInput.value,
       userId: currentUserId,
       roomId: roomId,
+      mentions,
     };
     socket.emit("chat message", payload);
 
@@ -55,12 +103,18 @@ document.addEventListener("DOMContentLoaded", (e) => {
       senderId,
       sender,
       body,
+      mentions,
       contentType,
       profileImageSrc,
       hour,
       newDay,
       _id,
     } = msgObject;
+
+    mentions.forEach((mention) => {
+      if (contentType == "text")
+        body += `    <span style="color: darkblue">@${mention}</span>`;
+    });
     console.log(senderId, currentUserId);
     const p = newDay ? `<p>${newDay}</p>` : "";
     const formatedContent = `${p}<div class="li-content" id="${_id}"><img src="${profileImageSrc}"/>

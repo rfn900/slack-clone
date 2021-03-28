@@ -97,9 +97,13 @@ io.on("connection", (socket) => {
 
     socket.on("chat message", async (payload) => {
       // console.log(payload);
-      const { content, userId } = payload;
+      const { content, userId, mentions } = payload;
       const user = await User.findOne({ _id: userId });
-
+      const mentionedNames = [];
+      for (mention of mentions) {
+        const userMentioned = await User.findOne({ _id: mention });
+        mentionedNames.push(userMentioned.name);
+      }
       let message = new Message({ ...payload, contentType: "text" });
 
       let checkNewDay = await isFirstMsgToday(message);
@@ -110,6 +114,7 @@ io.on("connection", (socket) => {
           senderId: user._id,
           sender: user.name,
           body: content,
+          mentions: mentionedNames,
           contentType: "text",
           profileImageSrc: `../${user.profileImage}`,
           hour: moment(message.date).format("HH:mm"),

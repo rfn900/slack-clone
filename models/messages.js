@@ -10,7 +10,7 @@ const MessagesSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-
+  mentions: [mongoose.ObjectId],
   userId: {
     type: mongoose.ObjectId,
     required: true,

@@ -15,6 +15,13 @@ router.get("/login", (req, res) => {
   }
 });
 
+router.get("/:username", async (req, res) => {
+  const users = await User.find();
+  user = users.filter((usr) => usr.name.includes(req.params.username));
+  console.log(user);
+  res.json(user);
+});
+
 router.post("/login", (req, res, next) => {
   passport.authenticate("local", {
     successRedirect: "/",

@@ -75,7 +75,7 @@ li {
   visibility: visible;
 }
 
-.emoji-box {
+@mixin pop-box {
   width: 350px;
   background-color: #f8f8f8;
   overflow-y: scroll;
@@ -126,6 +126,23 @@ li {
       margin: 5px;
       font-size: 20px;
       cursor: pointer;
+    }
+  }
+}
+
+.emoji-box {
+  @include pop-box();
+  transform: translateX(20px);
+}
+
+.mentions-box {
+  @include pop-box();
+  transform: translateX(-40px);
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    li {
     }
   }
 }
@@ -247,6 +264,26 @@ header {
   width: 100%;
   display: flex;
 
+  .mentions-container {
+    padding: 100px 200px;
+    .mentions-message {
+      margin: 40px 0;
+      .mention-sender {
+        margin: 40px 0 10px 0;
+        font-weight: 600;
+      }
+      .mention-content {
+        width: 100%;
+        background-color: #f8f8f8;
+        padding: 20px;
+        border-radius: 20px;
+
+        span {
+          color: darkblue;
+        }
+      }
+    }
+  }
   .dashboard-container {
     display: flex;
     align-items: center;
@@ -360,23 +397,25 @@ header {
       margin-top: 20px;
       margin-bottom: 10px;
       &__item {
-        padding: 6px 20px;
-        display: flex;
-        align-items: center;
-        color: #baa3bb;
-        svg {
-          margin-right: 10px;
-          width: 20px;
-        }
+        a {
+          padding: 6px 20px;
+          display: flex;
+          align-items: center;
+          color: #baa3bb;
+          svg {
+            margin-right: 10px;
+            width: 20px;
+          }
 
-        .fa-bookmark {
-          margin-left: 3px;
-          width: 15px;
-        }
-        .fa-ellipsis-v {
-          margin-left: 8px;
-          margin-right: 14px;
-          width: 5px;
+          .fa-bookmark {
+            margin-left: 3px;
+            width: 15px;
+          }
+          .fa-ellipsis-v {
+            margin-left: 8px;
+            margin-right: 14px;
+            width: 5px;
+          }
         }
       }
     }
@@ -534,7 +573,7 @@ header {
             padding: 10px 25px 15px 25px;
             position: relative;
 
-            .emoji-box {
+            .pop-box {
               top: -40px;
               right: 40px;
               height: 300px;
@@ -699,6 +738,19 @@ header {
         display: flex;
         align-items: center;
         width: 100%;
+
+        #mentions-results {
+          span {
+            margin-right: 10px;
+            background: rgba(246, 178, 28, 0.2);
+            border: none;
+            border-radius: 20px;
+            padding: 5px;
+            font-size: 14px;
+            color: #333;
+          }
+        }
+
         .bolt-icon {
           display: flex;
           align-items: center;

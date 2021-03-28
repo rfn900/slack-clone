@@ -4,6 +4,7 @@ const moment = require("moment");
 
 const User = require("../models/users");
 const Messages = require("../models/messages");
+const Rooms = require("../models/rooms");
 
 const { uploadPath, upload } = require("../utils/upload");
 const { ensureAuthenticated } = require("../config/auth");
@@ -20,6 +21,43 @@ function returnRouter(io) {
     message.content = updatedContent;
     await message.save();
     res.redirect(referer);
+  });
+
+  router.get("/mentions", ensureAuthenticated, async (req, res) => {
+    const messages = await Messages.find();
+    const userId = req.session.passport.user;
+    const user = await User.findOne({ _id: userId });
+    const rooms = await Rooms.find();
+    const messagesWithMentions = messages.filter((msg) =>
+      msg.mentions.includes(userId)
+    );
+    const senders = [];
+    const formatedHours = [];
+    const formatedDays = [];
+    for (message of messagesWithMentions) {
+      const senderName = await User.findOne({ _id: message.userId });
+      const day = moment(message.date).format("MMMM Do, YYYY");
+      const hour = moment(message.date).format("HH:mm");
+      formatedHours.push(hour);
+      formatedDays.push(day);
+      senders.push(senderName);
+    }
+
+    res.render("mentions", {
+      senders,
+      messages: messagesWithMentions,
+      days: formatedDays,
+      hours: formatedHours,
+      name: user.name,
+      rooms,
+      ...icons,
+      profileImage: user.profileImage,
+      scriptsPath: [
+        "/socket.io/socket.io.js",
+        "../js/main-script.js",
+        "../js/chat-script.js",
+      ],
+    });
   });
 
   router.post("/delete/:msgId", ensureAuthenticated, async (req, res) => {

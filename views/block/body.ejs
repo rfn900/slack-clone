@@ -100,12 +100,13 @@
       id="main-chat-input"
       placeholder="Send message to chat"
     />
-  
-    <%- atIcon %> <label for="chat_upload_pic" class="file-upload-label"
+    <div id="mentions-results"></div>
+    <span id="mentions-span" style="padding: 5px; margin-bottom: 5px;">@</span> <label for="chat_upload_pic" class="file-upload-label"
     ><%- paperclipIcon %></label><%- smileyIcon %> 
     <button id="chat-submit-button" disabled><%- paperplaneIcon %></button>
   </form>
   <form method="post" action="/message/upload-file" enctype="multipart/form-data"><input type="file" id="chat_upload_pic" name="chat_upload_pic" hidden onchange="this.form.submit()"/></form>
+  <form id="mention-form" method="post" action="/message/mention"><input type="text" id="mention-post-input" name="mention" hidden/></form>
 </div>
 <script> 
   const currentUserId = "<%- userId %>" 

@@ -5,6 +5,7 @@
   <% if (view === "chat") { %>
   <div class="chat_body"><%- include('block/body') %></div>
   <% } else if (view === "profile") {%> <%- include('block/profile') %> <% } %>
+  
   <div id="emoji-list-box" class="hide emoji-box">
     <input
       type="text"
@@ -15,6 +16,17 @@
     />
     <ul id="emoji-list"></ul>
   </div>
+
+  <div id="mentions-box" class="hide mentions-box">
+    <input 
+      type="text" 
+      name="mentions" 
+      id="mentions-input" 
+      placeholder="Start typing to browse users..."
+    />
+
+  </div>
+
 </div>
 
 <%- include('block/footer'); %>

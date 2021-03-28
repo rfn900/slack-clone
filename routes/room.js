@@ -14,15 +14,23 @@ router.get("/:roomId", ensureAuthenticated, async (req, res, next) => {
   const roomId = req.params.roomId;
   const room = await Rooms.findOne({ _id: roomId });
   const rooms = await Rooms.find({ private: false }).sort({ date: -1 });
+
   const user = await User.findOne({ _id: userId });
   const messages = await Messages.find({ roomId: roomId });
+
   //const messages = await Messages.find();
   const sendersArray = [];
   const formatedDate = [];
   const writeHeaderDate = [];
-
+  const userIdToName = {};
   for (message of messages) {
     const name = await User.findOne({ _id: message.userId });
+
+    for (mention of message.mentions) {
+      const mentionedUser = await User.findOne({ _id: mention });
+      if (!message.content.includes("@"))
+        message.content += `   <span style="color:darkblue">@${mentionedUser.name}</span>`;
+    }
     const checkForNewDay = await isNewDay(message);
     sendersArray.push(name);
     writeHeaderDate.push(checkForNewDay);
