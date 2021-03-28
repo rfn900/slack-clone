@@ -36,7 +36,6 @@ app.use(
     saveUninitialized: true,
   })
 );
-
 // Passport
 app.use(passport.initialize());
 app.use(passport.session());
@@ -60,15 +59,16 @@ var homeRouter = require("./routes/home");
 var usersRouter = require("./routes/users");
 var profileRouter = require("./routes/profile");
 var roomsRouter = require("./routes/room");
+var publicChatsRouter = require("./routes/publicChats");
+var messagesRouter = require("./routes/messages")(io);
 
-const { clearLine } = require("readline");
 // Setting up view engine
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 // Middlewares:
 app.use(express.urlencoded({ extended: false }));
-app.use(logger("dev"));
+// app.use(logger("dev"));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -85,84 +85,91 @@ app.use("/", homeRouter);
 app.use("/users", usersRouter);
 app.use("/profile", profileRouter);
 app.use("/room", roomsRouter);
+app.use("/public-chats", publicChatsRouter);
+app.use("/message", messagesRouter);
 
 // Setting up the socket:
 
 io.on("connection", (socket) => {
   console.log("User just connected");
+  socket.on("join room", ({ username, currentUserId, room, roomId }) => {
+    socket.join(roomId);
 
-  socket.on("chat message", async (payload) => {
-    console.log(payload);
-    const { content, userId } = payload;
-    const user = await User.findOne({ _id: userId });
+    socket.on("chat message", async (payload) => {
+      // console.log(payload);
+      const { content, userId } = payload;
+      const user = await User.findOne({ _id: userId });
 
-    let message = new Message(payload);
+      let message = new Message({ ...payload, contentType: "text" });
 
-    let checkNewDay = await isFirstMsgToday(message);
+      let checkNewDay = await isFirstMsgToday(message);
 
-    try {
-      await message.save();
-      io.emit("chat message", {
-        sender: user.name,
-        body: content,
-        profileImageSrc: `../${user.profileImage}`,
-        hour: moment(message.date).format("HH:mm"),
-        newDay: checkNewDay
-          ? moment(message.date).format("MMMM Do, YYYY")
-          : null,
-        _id: message._id,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  });
-
-  socket.on("emoji", async (data) => {
-    const { emoji, _id } = data;
-    const message = await Message.findOne({ _id: _id });
-
-    let emojiCount = 0;
-    if (message.reactions.length > 0) {
-      message.reactions.forEach(async (reaction) => {
-        if (reaction.emoji == emoji) {
-          emojiCount = reaction.count;
-          try {
-            await Message.updateOne(
-              {
-                _id: _id,
-                "reactions.emoji": emoji,
-              },
-              { $inc: { "reactions.$.count": 1 } }
-            );
-            io.emit("emoji", {
-              emoji: reaction.emoji,
-              count: reaction.count + 1,
-              messageId: message._id,
-            });
-          } catch (error) {
-            throw error;
-          }
-        }
-      });
-    }
-
-    if (emojiCount == 0) {
-      message.reactions.push({
-        emoji: emoji,
-        count: 1,
-      });
       try {
         await message.save();
-
-        io.emit("emoji", {
-          emoji: emoji,
-          count: 1,
-          messageId: message._id,
+        io.to(roomId).emit("chat message", {
+          senderId: user._id,
+          sender: user.name,
+          body: content,
+          contentType: "text",
+          profileImageSrc: `../${user.profileImage}`,
+          hour: moment(message.date).format("HH:mm"),
+          newDay: checkNewDay
+            ? moment(message.date).format("MMMM Do, YYYY")
+            : null,
+          _id: message._id,
         });
       } catch (error) {
         console.log(error);
       }
-    }
+    });
+
+    socket.on("emoji", async (data) => {
+      const { emoji, _id } = data;
+      const message = await Message.findOne({ _id: _id });
+
+      let emojiCount = 0;
+      if (message.reactions.length > 0) {
+        message.reactions.forEach(async (reaction) => {
+          if (reaction.emoji == emoji) {
+            emojiCount = reaction.count;
+            try {
+              await Message.updateOne(
+                {
+                  _id: _id,
+                  "reactions.emoji": emoji,
+                },
+                { $inc: { "reactions.$.count": 1 } }
+              );
+              io.to(roomId).emit("emoji", {
+                emoji: reaction.emoji,
+                count: reaction.count + 1,
+                messageId: message._id,
+              });
+            } catch (error) {
+              throw error;
+            }
+          }
+        });
+      }
+
+      if (emojiCount == 0) {
+        message.reactions.push({
+          emoji: emoji,
+          count: 1,
+        });
+        try {
+          await message.save();
+
+          io.to(roomId).emit("emoji", {
+            emoji: emoji,
+            count: 1,
+            messageId: message._id,
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    });
   });
 
   socket.on("disconnect", () => {

@@ -4,8 +4,14 @@ document.addEventListener("DOMContentLoaded", (e) => {
   const chatInput = document.getElementById("main-chat-input");
   const messagesUl = document.getElementById("messages");
   const chatSubmitBtn = document.getElementById("chat-submit-button");
-  const scrollDiv = document.querySelector(".chat_body__messages");
-  console.log(currentUserId);
+  let editBtn = Array.from(document.getElementsByClassName("edit-icon"));
+  const deleteBtn = Array.from(document.getElementsByClassName("delete-icon"));
+  console.log(username, room);
+
+  socket.emit("join room", { username, currentUserId, room, roomId });
+  const scrollDiv = document.getElementById("messages-container");
+  scrollDiv.scrollTop = scrollDiv.scrollHeight;
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const roomId = window.location.pathname.split("/")[2];
@@ -17,14 +23,14 @@ document.addEventListener("DOMContentLoaded", (e) => {
     socket.emit("chat message", payload);
 
     chatInput.value = "";
-    scrollDiv.scrollTop = scrollDiv.scrollHeight;
     chatSubmitBtn.setAttribute("disabled", "true");
+    editBtn = Array.from(document.getElementsByClassName("edit-icon"));
     return false;
   });
 
   socket.on("chat message", (msg) => {
     const li = document.createElement("li");
-    li.innerHTML = formatedMessage(msg);
+    li.innerHTML = formatedMessage(msg, currentUserId);
 
     if (msg.newDay) {
       li.style.borderTop = "1px dotted #ccc";
@@ -37,23 +43,44 @@ document.addEventListener("DOMContentLoaded", (e) => {
     const emojiBtn = document.getElementById(`${msg._id}-emoji-btn`).firstChild
       .firstChild;
     // console.log(emojiUl);
+    const scrollDiv = document.getElementById("messages-container");
+    scrollDiv.scrollTop = scrollDiv.scrollHeight;
+
     filterEmojis(searchEmoji, emojiUl);
     closeEmojiBoxOnClick(emojiBtn, emojiDiv);
-    // console.log(emojiBtn)
   });
 
-  const formatedMessage = (msgObject) => {
-    var { sender, body, profileImageSrc, hour, newDay, _id } = msgObject;
+  const formatedMessage = (msgObject, currentUserId) => {
+    var {
+      senderId,
+      sender,
+      body,
+      contentType,
+      profileImageSrc,
+      hour,
+      newDay,
+      _id,
+    } = msgObject;
+    console.log(senderId, currentUserId);
     const p = newDay ? `<p>${newDay}</p>` : "";
     const formatedContent = `${p}<div class="li-content" id="${_id}"><img src="${profileImageSrc}"/>
-    <div class="message-container"><div class="message-header"><span class="message-sender">${sender}</span><span class="message-hour">${hour}</span></div> 
-    <div class="message-content">${body}</div><div id="${_id}-reactions" class="emoji-list"></div></div>
+    <div  class="message-container"><div class="message-header"><span class="message-sender">${sender}</span><span class="message-hour">${hour}</span></div> 
+    <div id="${_id}-content" class="message-content">${
+      contentType == "text"
+        ? body
+        : `<img src="${body}" class="user-upload" alt="chat image"/>`
+    }</div><div id="${_id}-reactions" class="emoji-list"></div></div>
     <div class="reaction-box">
       <span class="reaction-span" >${emojis.white_check_mark}</span>
       <span class="reaction-span" >${emojis.eyes}</span>
       <span class="reaction-span">${emojis.raised_hands}</span>
       <span id="${_id}-emoji-btn">${svgs.smiley}</span>
-      <span>${svgs.bookmark}</span>
+      <span class="${senderId == currentUserId ? "" : "hide"}" _id="${_id}">
+        <img class="edit-icon" style="width: 20px; object-fit:contain;" src="../images/edit.png" _id="${_id}"/>
+      </span>
+      <span class="${senderId == currentUserId ? "" : "hide"}" _id="${_id}">
+        <img class="delete-icon" style="width: 20px; object-fit:contain;" src="../images/trashcan.png" _id="${_id}"/>
+      </span>
     </div>
     <div id="${_id}-full-emoji-div" class="hide emoji-box">
       <input type="text" class="search-emoji" id="${_id}-search-emoji" placeholder="Search emojis here"/>
@@ -72,6 +99,35 @@ document.addEventListener("DOMContentLoaded", (e) => {
     const isClickToExpandEmojiList = Array.from(e.target.classList).includes(
       "emoji-list-button-svg"
     );
+    const isClickToEdit = Array.from(e.target.classList).includes("edit-icon");
+
+    const isClickToDelete = Array.from(e.target.classList).includes(
+      "delete-icon"
+    );
+
+    if (isClickToDelete) {
+      const messageId = e.target.getAttribute("_id");
+      var r = confirm("Are you sure you want to delete this message?");
+      if (r) {
+        await fetch(`/message/delete/${messageId}`, {
+          method: "POST",
+        });
+        window.location.reload();
+      }
+    }
+
+    if (isClickToEdit) {
+      const messageId = e.target.getAttribute("_id");
+
+      const content = document.getElementById(`${messageId}-content`).innerText;
+      const contentWidth = document.getElementById(`${messageId}-content`)
+        .offsetWidth;
+      const contentHeight = document.getElementById(`${messageId}-content`)
+        .offsetHeight;
+      document.getElementById(
+        `${messageId}-content`
+      ).innerHTML = `<form method="post" action="/message/edit/${messageId}"><textarea name="messageEdit">${content}</textarea><input type="submit"/><a href="./${roomId}">Cancel</a></form>`;
+    }
 
     if (isClickToExpandEmojiList) {
       let messageId = e.path[4].id.split("-")[0];

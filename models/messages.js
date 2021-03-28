@@ -6,11 +6,17 @@ const MessagesSchema = new mongoose.Schema({
     required: true,
   },
 
+  contentType: {
+    type: String,
+    required: true,
+  },
+
   userId: {
     type: mongoose.ObjectId,
     required: true,
   },
   reactions: [Object],
+
   roomId: {
     type: mongoose.ObjectId,
     required: true,

@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", (e) => {
   const emojiUl = document.getElementById("emoji-list");
   const emojiBox = document.getElementById("emoji-list-box");
   const searchEmoji = document.getElementById("search-emoji");
+  const uploadBtn = document.getElementById("chat_upload_pic");
 
   emojiBtn.addEventListener("click", (e) => {
     loadEmojis(emojiUl);

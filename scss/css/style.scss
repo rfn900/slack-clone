@@ -13,6 +13,12 @@ body,
 body {
   height: 100vh;
 }
+
+a {
+  text-decoration: none;
+  color: inherit;
+  font-weight: 700;
+}
 li {
   list-style: none;
 }
@@ -478,7 +484,7 @@ header {
     &__messages {
       height: 100%;
       position: relative;
-      overflow-y: overlay;
+      overflow-y: scroll;
       &::-webkit-scrollbar {
         width: 10px;
         height: 10px;
@@ -548,6 +554,24 @@ header {
               border: #ccc solid 1px;
               border-radius: 10px;
 
+              .edit-icon {
+                svg {
+                  width: 20px;
+                  path {
+                    fill: #424141;
+                  }
+                }
+              }
+
+              .delete-icon {
+                svg {
+                  width: 20px;
+                  path {
+                    fill: #e01e5a;
+                  }
+                }
+              }
+
               span {
                 margin: 0 10px;
                 cursor: pointer;
@@ -595,9 +619,15 @@ header {
             }
 
             .message-container {
+              position: relative;
               padding: 0 10px;
+              width: 100%;
               &:hover {
                 background-color: #fafafa;
+              }
+              img {
+                width: 80%;
+                object-fit: contain;
               }
               .message-header {
                 display: flex;
@@ -617,6 +647,38 @@ header {
                 color: #424141;
                 font-size: 16px;
                 line-height: 1.5;
+                width: 100%;
+                height: inherit;
+
+                form {
+                  width: 100%;
+                  height: inherit;
+
+                  textarea {
+                    font-size: 16px;
+                    color: #313131;
+                    width: 100%;
+                    height: 100px;
+                    padding: 10px;
+                    border: none;
+                    border-radius: 10px;
+                    // background-color: rgba(51, 182, 125, 0.05);
+                    background-color: white;
+                    box-shadow: 10px 3px 20px rgba(0, 0, 0, 0.04);
+                    margin-bottom: 10px;
+                  }
+
+                  input {
+                    padding: 10px;
+                    background-color: #340e36;
+                    color: white;
+                    border: none;
+                    font-size: 16px;
+                    border-radius: 10px;
+                    margin-right: 10px;
+                    cursor: pointer;
+                  }
+                }
               }
             }
           }
@@ -624,10 +686,11 @@ header {
       }
     }
     .chat_body__input {
-      margin: auto 40px 20px 40px;
+      margin: 20px 40px;
       display: flex;
       justify-content: center;
       align-items: center;
+      flex-direction: column;
       border: 1px solid #bbb;
       height: 45px;
       border-radius: 3px;

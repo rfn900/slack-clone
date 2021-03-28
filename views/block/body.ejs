@@ -5,7 +5,7 @@
   </div>
   <div class="chatroom_participants"></div>
 </div>
-<div class="chat_body__messages">
+<div id="messages-container" class="chat_body__messages">
   <ul id="messages">
     <% if (messages!=-1) { %> <% messages.forEach((message, index)=> { %> 
 
@@ -23,7 +23,14 @@
             <span class="message-sender"> <%- senders[index].name %> </span
             ><span class="message-hour"> <%- date[index].hour %> </span>
           </div>
-          <div class="message-content"><%- message.content %></div>
+          <div id="<%- message._id %>-content" class="message-content">
+          <% if (message.contentType == "image") { %>
+              <img src="<%- message.content %>" alt="chat image" class="user-upload"/>
+          <% } else{%>
+              <%- message.content %> 
+          <% } %>
+            
+          </div>
           <div id="<%- message._id %>-reactions" class="emoji-list">
             <% message.reactions.forEach(reaction=> { %>
             <div class="reaction-count">
@@ -34,7 +41,8 @@
             <% }) %>
           </div>
         </div>
-        <div class="reaction-box">
+        <div id="<%- message._id %>-reaction-box" class="reaction-box">
+        
           <span class="reaction-span">✅</span>
           <span class="reaction-span">👀</span>
           <span class="reaction-span">🙌</span>
@@ -65,29 +73,8 @@
                 fill="#626262"
               /></svg
           ></span>
-          <span
-            ><svg
-              class="bookmark-button-svg"
-              xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink"
-              aria-hidden="true"
-              focusable="false"
-              width="1em"
-              height="1em"
-              style="
-                -ms-transform: rotate(360deg);
-                -webkit-transform: rotate(360deg);
-                transform: rotate(360deg);
-              "
-              preserveAspectRatio="xMidYMid meet"
-              viewBox="0 0 16 16"
-            >
-              <g fill="#626262">
-                <path
-                  d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"
-                />
-              </g></svg
-          ></span>
+          <span class="<%- senders[index]._id == userId ? "" : "hide" %> edit-icon" _id="<%- message._id %>"><img class="edit-icon" style="width: 20px; object-fit:contain;" src="../images/edit.png" _id="<%- message._id %>"/></span>
+          <span class="<%- senders[index]._id == userId ? "" : "hide" %> delete-icon" _id="<%- message._id %>"><img class="delete-icon" style="width: 20px; object-fit:contain;" src="../images/trashcan.png" _id="<%- message._id %>"/></span>
         </div>
         <div id="<%- message._id %>-full-emoji-div" class="hide emoji-box">
           <input
@@ -113,11 +100,19 @@
       id="main-chat-input"
       placeholder="Send message to chat"
     />
-    <span>Aa</span>
-    <%- atIcon %> <%- smileyIcon %> <%- paperclipIcon %>
+  
+    <%- atIcon %> <label for="chat_upload_pic" class="file-upload-label"
+    ><%- paperclipIcon %></label><%- smileyIcon %> 
     <button id="chat-submit-button" disabled><%- paperplaneIcon %></button>
   </form>
+  <form method="post" action="/message/upload-file" enctype="multipart/form-data"><input type="file" id="chat_upload_pic" name="chat_upload_pic" hidden onchange="this.form.submit()"/></form>
 </div>
 <script> 
   const currentUserId = "<%- userId %>" 
+  const roomId = "<%- roomId %>" 
+  const username = "<%- name %>" 
+  const room = "<%- roomName %>" 
+  
+ 
+  
 </script>

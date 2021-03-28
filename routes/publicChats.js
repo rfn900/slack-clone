@@ -10,17 +10,16 @@ const Rooms = require("../models/rooms");
 
 router.get("/", ensureAuthenticated, async (req, res, next) => {
   const userId = req.session.passport.user;
-  const user = await User.findOne({ _id: userId });
   const rooms = await Rooms.find({ private: false }).sort({ date: -1 });
-  res.render("home", {
+  user = await User.findOne({ _id: userId });
+
+  res.render("publicChats", {
     rooms: rooms,
     roomId: "no-room",
-    name: user.name,
-    email: user.email,
     profileImage: user.profileImage,
-    date: moment(user.date).format("MMMM Do, YYYY"),
-    view: "profile",
-    scriptsPath: ["js/main-script.js", "js/profile-script.js"],
+    name: user.name,
+    userId: userId,
+    scriptsPath: ["/socket.io/socket.io.js", "js/main-script.js"],
     ...icons,
   });
 });

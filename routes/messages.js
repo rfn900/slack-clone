@@ -4,96 +4,105 @@ const moment = require("moment");
 
 const User = require("../models/users");
 const Messages = require("../models/messages");
-const Rooms = require("../models/rooms");
 
+const { uploadPath, upload } = require("../utils/upload");
 const { ensureAuthenticated } = require("../config/auth");
 const icons = require("../utils/icons");
 const { isFirstMsgToday } = require("../utils/checkLatestMsg");
 
 function returnRouter(io) {
-  router.post("/", ensureAuthenticated, async (req, res, next) => {
-    const userId = req.session.passport.user;
+  router.post("/edit/:msgId", ensureAuthenticated, async (req, res) => {
+    const updatedContent = req.body.messageEdit;
+    const msgId = req.params.msgId;
+    const referer = req.headers.referer;
+    const message = await Messages.findOne({ _id: msgId });
 
-    const user = await User.findOne({ _id: userId });
-    const payload = {
-      userId: userId,
-      content: req.body.message,
-      roomId: req.body.roomId,
-    };
-
-    let message = new Messages(payload);
-    let checkNewDay = await isFirstMsgToday(message);
-    try {
-      await message.save();
-      io.emit("chat message", {
-        sender: user.name,
-        body: req.body.message,
-        profileImageSrc: user.profileImage,
-        hour: moment(message.date).format("HH:mm"),
-        newDay: checkNewDay
-          ? moment(message.date).format("MMMM Do, YYYY")
-          : null,
-        _id: message._id,
-      });
-      res.sendStatus(200);
-    } catch (error) {
-      console.log(error);
-      res.sendStatus(500);
-    }
+    message.content = updatedContent;
+    await message.save();
+    res.redirect(referer);
   });
 
-  router.post("/reaction", ensureAuthenticated, async (req, res) => {
-    const { emoji, _id } = req.body;
-    const message = await Messages.findOne({ _id: _id });
+  router.post("/delete/:msgId", ensureAuthenticated, async (req, res) => {
+    const referer = req.headers.referer;
+    const messageId = req.params.msgId;
+    await Messages.deleteOne({ _id: messageId });
+    res.redirect(referer);
+  });
 
-    let emojiCount = 0;
-    if (message.reactions.length > 0) {
-      message.reactions.forEach(async (reaction) => {
-        if (reaction.emoji == emoji) {
-          emojiCount = reaction.count;
+  router.post(
+    "/upload-file",
+    upload.single("chat_upload_pic"),
+    async (req, res) => {
+      const ref = req.headers.referer;
+      console.log(req.file);
+      if (!isRightReferer(ref)) {
+        console.log("fail", isRightReferer(ref));
+        res.sendStatus(500);
+      } else {
+        // Upload file and emit socket event with details
+
+        const roomId = ref.split("/")[ref.split("/").length - 1];
+        const imagePath = uploadPath + req.file.filename;
+
+        if (req.file.size > 0) {
+          console.log(`File uploaded to ${imagePath}`);
+          const userId = req.session.passport.user;
+          const user = await User.findOne({ _id: userId });
+          console.log(userId, "userId");
+          const payload = {
+            content: `../uploads/${req.file.filename}`,
+            contentType: "image",
+            userId,
+            roomId,
+          };
+          const message = new Messages(payload);
+
+          let checkNewDay = await isFirstMsgToday(message);
+
           try {
-            await Messages.updateOne(
-              {
-                _id: _id,
-                "reactions.emoji": emoji,
-              },
-              { $inc: { "reactions.$.count": 1 } }
-            );
-            io.emit("emoji", {
-              emoji: reaction.emoji,
-              count: reaction.count + 1,
-              messageId: message._id,
+            await message.save();
+            io.to(roomId).emit("chat message", {
+              sender: user.name,
+              body: payload.content,
+              contentType: payload.contentType,
+              profileImageSrc: `../${user.profileImage}`,
+              hour: moment(message.date).format("HH:mm"),
+              newDay: checkNewDay
+                ? moment(message.date).format("MMMM Do, YYYY")
+                : null,
+              _id: message._id,
             });
-            res.sendStatus(200);
+            res.status(200);
+            res.redirect(`/room/${roomId}`);
           } catch (error) {
-            throw error;
+            console.log(error);
           }
         }
-      });
-    }
-
-    if (emojiCount == 0) {
-      message.reactions.push({
-        emoji: emoji,
-        count: 1,
-      });
-      try {
-        await message.save();
-
-        io.emit("emoji", {
-          emoji: emoji,
-          count: 1,
-          messageId: message._id,
-        });
-
-        res.sendStatus(200);
-      } catch (error) {
-        res.sendStatus(500);
       }
+    }
+  );
+
+  router.get("/:msgId", ensureAuthenticated, async (req, res) => {
+    const messageId = req.params.msgId;
+
+    try {
+      const message = await Messages.findOne({ _id: messageId });
+      console.log(message);
+      data = {
+        senderId: message.userId,
+      };
+      res.json(data);
+    } catch (error) {
+      res.json({ error: error.message });
     }
   });
 
   return router;
 }
 
+function isRightReferer(path) {
+  //TODO - check if path is the type http://localhosta:3000/room/:number
+  //console.log(path.match(/\/room\/.{24}$/), "REGEX");
+  return path.match(/\/room\/.{24}$/) ? true : false;
+}
 module.exports = returnRouter;

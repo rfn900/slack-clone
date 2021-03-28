@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", (e) => {
       textInput.setAttribute("name", inputName);
       textInput.setAttribute("required", true);
 
-      console.log(liParent.children[1].innerText);
+      // console.log(liParent.children[1].innerText);
       //textInput.value = liParent.children[1].innerText;
       textInput.setAttribute("placeholder", liParent.children[1].innerText);
       liParent.innerHTML = "";

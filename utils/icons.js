@@ -19,6 +19,7 @@ const paperplaneIcon = icon({ prefix: "fas", iconName: "paper-plane" }).html;
 const signOutAlt = icon({ prefix: "fas", iconName: "sign-out-alt" }).html;
 const profileIcon = icon({ prefix: "fas", iconName: "user-circle" }).html;
 const uploadIcon = icon({ prefix: "fas", iconName: "upload" }).html;
+const trashIcon = icon({ prefix: "fas", iconName: "trash-alt" }).html;
 const questionIcon = icon({ prefix: "far", iconName: "question-circle" }).html;
 const clockIcon = icon({ prefix: "far", iconName: "clock" }).html;
 const editIcon = icon({ prefix: "far", iconName: "edit" }).html;
@@ -50,6 +51,7 @@ const icons = {
   signOutAlt: signOutAlt,
   profileIcon: profileIcon,
   uploadIcon: uploadIcon,
+  trashIcon: trashIcon,
 };
 
 module.exports = icons;

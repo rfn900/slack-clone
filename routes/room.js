@@ -5,7 +5,6 @@ const moment = require("moment");
 const User = require("../models/users");
 const Messages = require("../models/messages");
 const Rooms = require("../models/rooms");
-
 const { ensureAuthenticated } = require("../config/auth");
 const icons = require("../utils/icons");
 const { isNewDay } = require("../utils/checkLatestMsg");
@@ -14,9 +13,10 @@ router.get("/:roomId", ensureAuthenticated, async (req, res, next) => {
   const userId = req.session.passport.user;
   const roomId = req.params.roomId;
   const room = await Rooms.findOne({ _id: roomId });
+  const rooms = await Rooms.find({ private: false }).sort({ date: -1 });
   const user = await User.findOne({ _id: userId });
-  // const messages = await Messages.find({ roomId: roomId });
-  const messages = await Messages.find();
+  const messages = await Messages.find({ roomId: roomId });
+  //const messages = await Messages.find();
   const sendersArray = [];
   const formatedDate = [];
   const writeHeaderDate = [];
@@ -35,6 +35,7 @@ router.get("/:roomId", ensureAuthenticated, async (req, res, next) => {
   const imgSrc = `../${user.profileImage}`;
   res.render("home", {
     title: "Welcome to Slack (the Clone)",
+    rooms: rooms,
     roomId: roomId,
     roomName: room.name,
     messages: messages ? messages : -1,
@@ -57,7 +58,7 @@ router.get("/:roomId", ensureAuthenticated, async (req, res, next) => {
 
 router.post("/create", ensureAuthenticated, async (req, res) => {
   const { roomName, isRoomPrivate } = req.body;
-  console.log(roomName, isRoomPrivate);
+  // console.log(roomName, isRoomPrivate);
 
   const userId = req.session.passport.user;
   const user = await User.findOne({ _id: userId });
