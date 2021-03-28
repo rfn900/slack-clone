@@ -4,7 +4,12 @@
     <div class="sidebar"><%- include('block/sidebar') %></div>
     <div class="mentions-container">
 
-      <h1>This is public Chats!</h1>
+      <% if (messages.length!=0) { %>
+        <h1>Here are your mentions!</h1>
+        
+        <% } else{%>
+          <h1>You don't have any mentions yet</h1>
+        <% } %>
       <div class="mentions-message">
         <% messages.forEach((msg,index) => { %>
          

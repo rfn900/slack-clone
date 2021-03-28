@@ -15,6 +15,13 @@ router.get("/login", (req, res) => {
   }
 });
 
+router.get("/logout", (req, res, next) => {
+  console.log("aqui");
+  req.logout();
+  req.flash("success_msg", "You are logged out");
+  res.redirect("/users/login");
+});
+
 router.get("/:username", async (req, res) => {
   const users = await User.find();
   user = users.filter((usr) => usr.name.includes(req.params.username));
@@ -28,12 +35,6 @@ router.post("/login", (req, res, next) => {
     failureRedirect: "/users/login",
     failureFlash: true,
   })(req, res, next);
-});
-
-router.get("/logout", (req, res, next) => {
-  req.logout();
-  req.flash("success_msg", "You are logged out");
-  res.redirect("/users/login");
 });
 
 router.get("/signup", (req, res) => {
