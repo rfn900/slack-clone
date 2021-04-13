@@ -132,7 +132,7 @@ li {
 
 .emoji-box {
   @include pop-box();
-  transform: translateX(20px);
+  transform: translate(-20px,330px);
 }
 
 .mentions-box {
