@@ -9,7 +9,6 @@ const mongoose = require("mongoose");
 const flash = require("connect-flash");
 const session = require("express-session");
 const passport = require("passport");
-const logger = require("morgan");
 const path = require("path");
 const sassMiddleware = require("node-sass-middleware");
 const moment = require("moment");
@@ -17,8 +16,13 @@ const moment = require("moment");
 require("./config/passport")(passport);
 const { isFirstMsgToday } = require("./utils/checkLatestMsg");
 // Connecting with mongodb
+
+const dotenv = require("dotenv");
+
+dotenv.config();
+
 mongoose
-  .connect("mongodb://localhost:27017/slack_clone", {
+  .connect(process.env.DATABASE, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -50,9 +54,6 @@ app.use((req, res, next) => {
 });
 
 const cookieParser = require("cookie-parser");
-const dotenv = require("dotenv");
-
-dotenv.config();
 
 // Setting up our routes
 var homeRouter = require("./routes/home");
@@ -92,11 +93,10 @@ app.use("/message", messagesRouter);
 
 io.on("connection", (socket) => {
   console.log("User just connected");
-  socket.on("join room", ({ username, currentUserId, room, roomId }) => {
+  socket.on("join room", ({ roomId }) => {
     socket.join(roomId);
 
     socket.on("chat message", async (payload) => {
-      // console.log(payload);
       const { content, userId, mentions } = payload;
       const user = await User.findOne({ _id: userId });
       const mentionedNames = [];

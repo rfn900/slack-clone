@@ -187,6 +187,7 @@ document.addEventListener("DOMContentLoaded", (e) => {
       let messageId = e.path[4].id.split("-")[0];
       let div = document.getElementById(`${messageId}-full-emoji-div`);
       let ul = document.getElementById(`${messageId}-full-emoji-list`);
+      let li = document.getElementById(`${messageId}`);
       const emojiBtn = document.getElementById(`${messageId}-emoji-btn`)
         .firstChild.children[0];
       const searchEmoji = document.getElementById(`${messageId}-search-emoji`);
@@ -195,6 +196,10 @@ document.addEventListener("DOMContentLoaded", (e) => {
       filterEmojis(searchEmoji, ul);
       closeEmojiBoxOnClick(emojiBtn, div);
       div.classList.toggle("hide");
+
+      li.addEventListener("mouseleave", () => {
+        div.classList.add("hide");
+      });
     }
 
     if (isClickFromEmojiElement) {
