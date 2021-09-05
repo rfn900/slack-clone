@@ -7,6 +7,7 @@ dotenv.config();
 const s3 = new aws.S3({
   secretAccessKey: process.env.SECRET_ACCESS_KEY,
   accessKeyId: process.env.ACCESS_KEY_ID,
+  bucket: process.env.BUCKET,
 });
 
 const upload = multer({
