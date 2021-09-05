@@ -17,7 +17,7 @@
       <% } %>
 
       <div class="li-content" id="<%- message._id %>">
-        <img src="../<%- senders[index].profileImage %> " />
+        <img src="https://rod-app-bucket.s3.eu-north-1.amazonaws.com/<%- senders[index].profileImage %> " />
         <div class="message-container">
           <div class="message-header">
             <span class="message-sender"> <%- senders[index].name %> </span
@@ -25,7 +25,7 @@
           </div>
           <div id="<%- message._id %>-content" class="message-content">
           <% if (message.contentType == "image") { %>
-              <img src="<%- message.content %>" alt="chat image" class="user-upload"/>
+              <img src="https://rod-app-bucket.s3.eu-north-1.amazonaws.com/<%- message.content %>" alt="chat image" class="user-upload"/>
           <% } else{%>
               <%- message.content %> 
           <% } %>

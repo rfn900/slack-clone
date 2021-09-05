@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const passport = require("passport");
 
-const { uploadPath, upload } = require("../utils/upload");
+const { upload, uploadFileS3, uploadPath } = require("../utils/uploadS3");
 const User = require("../models/users");
 
 /* Adding GET method to homepage */
@@ -116,13 +116,14 @@ router.post(
   async (req, res) => {
     try {
       const profile_pic = uploadPath + req.file.filename;
-      console.log(req.file);
+      const result = await uploadFileS3(req.file);
+      console.log(result);
+
       if (req.file.size > 0) {
         console.log(`File uploaded to ${profile_pic}`);
-
         const userId = req.session.passport.user;
         user = await User.findOne({ _id: userId });
-        user.profileImage = `uploads/${req.file.filename}`;
+        user.profileImage = `${req.file.filename}`;
         await user.save();
         res.redirect("/profile");
       }

@@ -2,7 +2,7 @@
   <div class="profile-body">
     <div class="profile-body__left">
       <h1>Hi, <%= name %></h1>
-      <img src="<%- profileImage %> " alt="" />
+      <img src="https://rod-app-bucket.s3.eu-north-1.amazonaws.com/<%- profileImage %> " alt="" />
       <form
         action="/users/upload-profile-pic"
         method="POST"

@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", (e) => {
     <div id="${_id}-content" class="message-content">${
       contentType == "text"
         ? body
-        : `<img src="${body}" class="user-upload" alt="chat image"/>`
+        : `<img src="https://rod-app-bucket.s3.eu-north-1.amazonaws.com/${body}" class="user-upload" alt="chat image"/>`
     }</div><div id="${_id}-reactions" class="emoji-list"></div></div>
     <div class="reaction-box">
       <span class="reaction-span" >${emojis.white_check_mark}</span>

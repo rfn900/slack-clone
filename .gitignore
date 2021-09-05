@@ -1,7 +1,8 @@
 node_modules/
-
+public/uploads/
 .env
-
+public/.DS_Store
+.DS_Store
 *.jpg
 *.jpeg
 *.png

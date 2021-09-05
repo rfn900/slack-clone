@@ -6,7 +6,7 @@ const User = require("../models/users");
 const Messages = require("../models/messages");
 const Rooms = require("../models/rooms");
 
-const { uploadPath, upload } = require("../utils/upload");
+const { upload, uploadFileS3, uploadPath } = require("../utils/uploadS3");
 const { ensureAuthenticated } = require("../config/auth");
 const icons = require("../utils/icons");
 const { isFirstMsgToday } = require("../utils/checkLatestMsg");
@@ -86,9 +86,10 @@ function returnRouter(io) {
           console.log(`File uploaded to ${imagePath}`);
           const userId = req.session.passport.user;
           const user = await User.findOne({ _id: userId });
+          const result = await uploadFileS3(req.file);
           console.log(userId, "userId");
           const payload = {
-            content: `../uploads/${req.file.filename}`,
+            content: result.key,
             contentType: "image",
             userId,
             roomId,
