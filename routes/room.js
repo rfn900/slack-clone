@@ -18,7 +18,6 @@ router.get("/:roomId", ensureAuthenticated, async (req, res, next) => {
   const user = await User.findOne({ _id: userId });
   const messages = await Messages.find({ roomId: roomId });
 
-  //const messages = await Messages.find();
   const sendersArray = [];
   const formatedDate = [];
   const writeHeaderDate = [];
@@ -40,7 +39,6 @@ router.get("/:roomId", ensureAuthenticated, async (req, res, next) => {
       hour: moment(message.date).format("HH:MM"),
     });
   }
-  const imgSrc = `../${user.profileImage}`;
   res.render("home", {
     title: "Welcome to Slack (the Clone)",
     rooms: rooms,
@@ -53,7 +51,7 @@ router.get("/:roomId", ensureAuthenticated, async (req, res, next) => {
     view: "chat",
     name: user.name,
     userId: userId,
-    profileImage: imgSrc,
+    profileImage: user.profileImage,
     scriptsPath: [
       "/socket.io/socket.io.js",
       "../js/socket-script.js",

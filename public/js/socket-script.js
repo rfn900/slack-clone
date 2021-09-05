@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", (e) => {
     });
     console.log(senderId, currentUserId);
     const p = newDay ? `<p>${newDay}</p>` : "";
-    const formatedContent = `${p}<div class="li-content" id="${_id}"><img src="${profileImageSrc}"/>
+    const formatedContent = `${p}<div class="li-content" id="${_id}"><img src="https://rod-app-bucket.s3.eu-north-1.amazonaws.com/${profileImageSrc}"/>
     <div  class="message-container"><div class="message-header"><span class="message-sender">${sender}</span><span class="message-hour">${hour}</span></div> 
     <div id="${_id}-content" class="message-content">${
       contentType == "text"

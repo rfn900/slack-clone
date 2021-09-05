@@ -17,6 +17,8 @@ require("./config/passport")(passport);
 const { isFirstMsgToday } = require("./utils/checkLatestMsg");
 // Connecting with mongodb
 
+const cors = require("cors");
+app.use(cors());
 const dotenv = require("dotenv");
 
 dotenv.config();
@@ -116,7 +118,7 @@ io.on("connection", (socket) => {
           body: content,
           mentions: mentionedNames,
           contentType: "text",
-          profileImageSrc: `../${user.profileImage}`,
+          profileImageSrc: user.profileImage,
           hour: moment(message.date).format("HH:mm"),
           newDay: checkNewDay
             ? moment(message.date).format("MMMM Do, YYYY")
