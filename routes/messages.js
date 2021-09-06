@@ -27,7 +27,7 @@ function returnRouter(io) {
     const messages = await Messages.find();
     const userId = req.session.passport.user;
     const user = await User.findOne({ _id: userId });
-    const rooms = await Rooms.find();
+    const rooms = await Rooms.find().sort({ date: -1 });
     const messagesWithMentions = messages.filter((msg) =>
       msg.mentions.includes(userId)
     );
@@ -52,11 +52,7 @@ function returnRouter(io) {
       rooms,
       ...icons,
       profileImage: user.profileImage,
-      scriptsPath: [
-        "/socket.io/socket.io.js",
-        "../js/main-script.js",
-        "../js/chat-script.js",
-      ],
+      scriptsPath: ["/socket.io/socket.io.js", "../js/main-script.js"],
     });
   });
 
