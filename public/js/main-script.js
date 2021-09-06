@@ -3,7 +3,17 @@ document.addEventListener("DOMContentLoaded", (e) => {
   const channelList = document.querySelectorAll(".channel__list");
   const toggleTitle = document.querySelectorAll(".toggle-title");
   const toggleH3 = document.querySelector(".toggle-h3");
+  const channelListItem = Array.from(
+    document.querySelectorAll(".channel__list__item")
+  );
 
+  channelListItem.map((item) => {
+    const linkHref = getLastParamOfUrl(item.firstChild.getAttribute("href"));
+    const roomId = getLastParamOfUrl(window.location.href);
+    linkHref === roomId
+      ? item.classList.add("active")
+      : item.classList.remove("active");
+  });
   // These event listeners apply to sidebar elements
   toggleTitle.forEach((item, index) => {
     item.addEventListener("click", (e) => {
@@ -25,4 +35,8 @@ document.addEventListener("DOMContentLoaded", (e) => {
       logoutBox.classList.add("hide");
     }
   });
+
+  function getLastParamOfUrl(url) {
+    return url.split("/")[url.split("/").length - 1];
+  }
 });
