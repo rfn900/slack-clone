@@ -10,6 +10,6 @@ This is a full stack web application built with NodeJS.
   - MongoDB
   - Ejs templating engine
   - SASS
-
+  - AWS for hosting images
   
 
