@@ -87,7 +87,6 @@ li {
   padding: 20px;
   z-index: 9;
   border-radius: 5px;
-  top: -20em;
   right: 140px;
   &::-webkit-scrollbar {
     // background-color: #340e36;
@@ -132,16 +131,16 @@ li {
 
 .emoji-box {
   @include pop-box();
-  transform: translate(0,330px);
 }
 
 .translate-emoji-box {
   @include pop-box();
-  transform: translate(30px,0);
+  transform: translate(30px,280px);
 }
 .mentions-box {
   @include pop-box();
-  transform: translateX(-40px);
+  transform: translate(-40px,-40px);
+  bottom:0;
 
   ul {
     display: flex;
