@@ -2,7 +2,7 @@
 
 This is a full stack web application built with NodeJS.
 
-**Link to the deployed application**: https://rod-slack-clone.herokuapp.com/
+[Check deployed application here](https://rod-slack-clone.herokuapp.com/)
 
 ## The stack':'
 
