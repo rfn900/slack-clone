@@ -4,7 +4,7 @@ This is a full stack web application built with NodeJS.
 
 [Check deployed application here](https://rod-slack-clone.herokuapp.com/)
 
-## The stack':'
+## The stack
 
 - Express
 - Socket.io
